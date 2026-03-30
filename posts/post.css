@@ -59,3 +59,12 @@ header {
     font-size: 48pt;
     font-weight: bold;
 }
+
+#foot {
+    position: sticky;
+    width: 100%;
+    bottom: 0;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--w7-w-bd);
+}
