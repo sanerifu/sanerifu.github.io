@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title><@ title=> $$ @></title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css">
+    <link rel="stylesheet" href="/posts/post.css">
+</head>
+
+<body>
+    <ul id="menubar" role="menubar" class="can-hover">
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+            Pages
+            <ul role="menu">
+                <li role="menuitem">
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="/posts">
+                        Posts
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+            Help
+            <ul role="menu">
+                <li role="menuitem"><a href="/about">About</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div id="content">
+        <@ title => <header>$$</header> @>
+            <article>
+                <@ body => $$ @>
+            </article>
+            <footer>
+                <@ tags? => <div> Etiketler: @>
+                    <@ tags => $$ @, >
+                <@ tags? => </div> @>
+
+                <@ authors? => <div> Yazan:  @>
+                    <@ authors => $$ @, >
+                <@ authors? => </div> @>
+
+                <@ date? => <div>Tarih: @>
+                    <@ date => $$ @, >
+                <@ date? => </div> @>
+            </footer>
+    </div>
+</body>
+
+</html>
