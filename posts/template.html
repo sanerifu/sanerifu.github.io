@@ -11,29 +11,7 @@
 </head>
 
 <body>
-    <ul id="menubar" role="menubar">
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
-            Pages
-            <ul role="menu">
-                <li role="menuitem">
-                    <a href="/">
-                        Home
-                    </a>
-                </li>
-                <li role="menuitem">
-                    <a href="/posts">
-                        Posts
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
-            Help
-            <ul role="menu">
-                <li role="menuitem"><a href="/about">About</a></li>
-            </ul>
-        </li>
-    </ul>
+    <# menubar.html #>
     <div id="content">
         <@ title=>
             <header>$$</header> @>
@@ -42,13 +20,13 @@
             </article>
     </div>
     <div id="foot" class="status-bar">
-        <p class="status-bar-field">
+        <p id="tag-field" class="status-bar-field">
             <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
         </p>
-        <p class="status-bar-field">
+        <p id="author-field" class="status-bar-field">
             <@ authors?=>Yazan: @> <@ authors=> $$ @, >
         </p>
-        <p class="status-bar-field">
+        <p id="date-field" class="status-bar-field">
             <@ date?=> Tarih: @> <@ date=> $$ @, >
         </p>
     </div>

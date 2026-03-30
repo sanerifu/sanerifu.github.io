@@ -72,3 +72,13 @@ header {
     border: 0;
     border-top: 1px solid var(--w7-w-bd);
 }
+
+#tag-field {
+    flex-grow: 1;
+}
+
+#author-field, #date-field {
+    flex-grow: 0;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
