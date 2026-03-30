@@ -60,6 +60,10 @@ header {
     font-weight: bold;
 }
 
+#menubar * {
+    user-select: none;
+}
+
 #foot {
     position: sticky;
     width: 100%;
