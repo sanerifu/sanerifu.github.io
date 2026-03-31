@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Gönderiler - Arama</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css" />
+    <link rel="stylesheet" href="index.css" />
+    <script src="post_index.js" defer="defer"></script>
+    <script src="index.js" defer="defer"></script>
+</head>
+
+<body>
+    <ul id="menubar" role="menubar">
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+            Pages
+            <ul role="menu">
+                <li role="menuitem">
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="/posts">
+                        Posts
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+            Help
+            <ul role="menu">
+                <li role="menuitem"><a href="/about">About</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div id="search-box">
+        <input id="searchbar" type="search" placeholder="Gönderilerde Ara" />
+    </div>
+    <table class="clickable-table">
+        <colgroup>
+            <col style="width: 10%;"/>
+            <col style="width: 40%;"/>
+            <col style="width: 25%;"/>
+            <col style="width: 25%;"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Gönderi</th>
+                <th>Yazar</th>
+                <th>Etiketler</th>
+            </tr>
+        </thead>
+        <tbody id="post-data"></tbody>
+    </table>
+
+    <div id="foot" class="status-bar">
+        <p id="post-count-field" class="status-bar-field"></p>
+    </div>
+</body>
+
+</html>
