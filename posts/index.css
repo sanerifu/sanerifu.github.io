@@ -1,0 +1,63 @@
+html {
+    height: 100%;
+}
+
+#menubar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#menubar * {
+    user-select: none;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.clickable-table td {
+    padding: 0;
+    margin: 0;
+}
+
+.clickable-table a {
+    display: block;
+    padding: 2px 8px;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+.clickable-table tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+#search-box {
+    background-color: #f0f0f0;
+    padding: 3px 1px;
+}
+
+#searchbar {
+    width: 100%;
+}
+
+#foot {
+    position: sticky;
+    width: 100%;
+    bottom: 0;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--w7-w-bd);
+    margin-top: auto;
+}
