@@ -54,7 +54,7 @@ addEntries(__INDEX__.toSorted((lhs, rhs) => {
 
 search.addEventListener('input', e => {
     /** @type {string} */
-    let query = e.target.value;
+    let query = e.target.value.toLowerCase();
 
     let index = __INDEX__.filter(
         entry => {
