@@ -1,0 +1,32 @@
+@import url("https://unpkg.com/7.css");
+
+html {
+    height: 100%;
+}
+
+#menubar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#menubar * {
+    user-select: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#notificationbar {
+    display: none;
+}

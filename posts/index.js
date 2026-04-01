@@ -7,6 +7,9 @@ const count_field = document.getElementById("post-count-field")
 /** @type {HTMLInputElement} */
 const search = document.getElementById("searchbar");
 
+/** @type {HTMLSpanElement} */
+const notification = document.getElementById("notification-count");
+
 function addEntries(index) {
     post_data.replaceChildren();
     for (let entry of index) {
@@ -37,7 +40,8 @@ function addEntries(index) {
         post_data.append(row);
     }
 
-    count_field.textContent = `${index.length} gönderi`
+    count_field.textContent = `${index.length} gönderi`;
+    notification.textContent = `${index.length} gönderi`;
 }
 
 addEntries(__INDEX__.toSorted((lhs, rhs) => {
