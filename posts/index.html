@@ -38,23 +38,25 @@
     <div id="search-box">
         <input id="searchbar" type="search" placeholder="Gönderilerde Ara" />
     </div>
-    <table class="clickable-table">
-        <colgroup>
-            <col style="width: 10%;"/>
-            <col style="width: 40%;"/>
-            <col style="width: 25%;"/>
-            <col style="width: 25%;"/>
-        </colgroup>
-        <thead>
-            <tr>
-                <th>Tarih</th>
-                <th>Gönderi</th>
-                <th>Yazar</th>
-                <th>Etiketler</th>
-            </tr>
-        </thead>
-        <tbody id="post-data"></tbody>
-    </table>
+    <div id="result-container">
+        <table class="clickable-table">
+            <colgroup>
+                <col style="width: 10%;" />
+                <col style="width: 40%;" />
+                <col style="width: 25%;" />
+                <col style="width: 25%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Gönderi</th>
+                    <th>Yazar</th>
+                    <th>Etiketler</th>
+                </tr>
+            </thead>
+            <tbody id="post-data"></tbody>
+        </table>
+    </div>
 
     <div id="foot" class="status-bar">
         <p id="post-count-field" class="status-bar-field"></p>

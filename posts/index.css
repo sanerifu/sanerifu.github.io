@@ -1,6 +1,10 @@
 @import url("/mobile.css") (orientation: portrait);
 @import url("/desktop.css") (orientation: landscape);
 
+* {
+    box-sizing: border-box;
+}
+
 .clickable-table td {
     padding: 0;
     margin: 0;
@@ -11,7 +15,6 @@
     padding: 2px 8px;
     text-decoration: none;
     color: inherit;
-    width: 100%;
 }
 
 .clickable-table tbody tr:hover {
@@ -21,6 +24,8 @@
 @media (orientation: portrait) {
     #search-box {
         height: 5vh;
+        margin: 1vh 2vw;
+        border: 4px solid black;
     }
 
     #searchbar {
@@ -32,8 +37,50 @@
         display: none;
     }
 
+    #result-container {
+        overflow-x: auto;
+        margin: 1vh 2vw;
+    }
+
     #notification-count {
         margin-left: auto;
+    }
+
+    .clickable-table {
+        table-layout: fixed;
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    .clickable-table > tbody {
+        border: 4px solid black;
+    }
+
+    .clickable-table thead {
+        background-color: #cecfef;
+    }
+
+    .clickable-table thead>tr>th {
+        border: 4px solid black;
+    }
+
+    .clickable-table thead>tr>th {
+        font-weight: normal;
+    }
+
+    .clickable-table colgroup>col {
+        width: unset !important;
+    }
+}
+
+@media (orientation: landscape) {
+    #mobile-results {
+        display: none;
+    }
+
+    .clickable-table {
+        width: 100%;
     }
 }
 
