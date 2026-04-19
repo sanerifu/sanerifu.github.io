@@ -54,7 +54,7 @@
         border-collapse: collapse;
     }
 
-    .clickable-table > tbody {
+    .clickable-table>tbody {
         border: 2px solid black;
     }
 

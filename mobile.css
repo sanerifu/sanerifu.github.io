@@ -31,4 +31,7 @@ body {
 
 #notification-date {
     margin-left: auto;
+    font-size: 0.60em;
+    display: flex;
+    align-items: center;
 }
