@@ -1,6 +1,6 @@
 @@@date = 2026-04-19 23:05:33 +0300 Pazar
 @@@authors = Elif Sanem Ceyhan
-@@@tags = internet, http, duygular, düşünceler
+@@@tags = internet; http; duygular; düşünceler
 
 # Genel Ağ
 
