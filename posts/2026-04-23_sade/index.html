@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Sade Kod
+    </title>
+    <link rel="stylesheet" href="/posts/post.css"/>
+</head>
+
+<body>
+    <div id="notificationbar"><a href="/">Sanerifu</a><span id="notification-date">2026-04-23 18:52:32 +0300 Prş</span></div>
+<ul id="menubar" role="menubar">
+    <li role="menuitem" tabindex="0" aria-haspopup="true">
+        Pages
+        <ul role="menu">
+            <li role="menuitem">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            <li role="menuitem">
+                <a href="/posts">
+                    Posts
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li role="menuitem" tabindex="0" aria-haspopup="true">
+        Help
+        <ul role="menu">
+            <li role="menuitem"><a href="/about">About</a></li>
+        </ul>
+    </li>
+</ul>
+
+    <div id="content">
+        <header>Sade Kod</header>
+            <article>
+                <p>
+Factory, interface, ABC, kalıtım, encapsulation... Nesne yönelimli programlama yazılımcıların hayatına çok sayıda terim soktu diyebiliriz. Büyük yazılımların mimarisini kurmak her zaman için zor olmuştur. Başlı başına bir beceri olduğu gibi birçok ürünün zaman içerisinde yitip gitmesi ile hayatını sürdürmesi arasındaki ince çizgi de mimarilerinin ne seviyede iyi veya kötü olduğuna bağlı. Yazılım fazlasıyla toy bir alan olduğu için bir şeyleri kurarken tam olarak ne yapmamız gerektiğini kimse tam anlamıyla bilmiyor. Binlerce yıllık mühendislik alanlarında dahi bilgi dağarcığında açıklıklar ortaya çıkabiliyorken kurucularının bazıları aramızda dolaşan bilgisayar biliminin bu sancıları çekmesi çok anormal değil sanki.
+</p>
+
+<p>
+Yukarıdaki terimler bir tür <em>mantra</em> olarak görülüyor, bunlara tâbi olunmazsa ölçeklenebilir bir yazılım üretilemez gibi. Sürekli tekrar etmeli, asla karşı çıkmamalı. Tasarım kalıpları uzun bir süredir okullarda öğretiliyor, mülakatlarda soruluyor ve iş hayatında kullanılıyor. Elbette bu kalıpların, ve genelinde bu kalıplara yol açan nesne yönelimli programlamanın, yanında bu kavramlara ciddi eleştiriler de geliyor. Bu eleştiriler neredeyse kavramların kendileri kadar eski. Dolayısıyla 2026 yılında yeni bir şey katabileceğimi zannetmiyorum. Yine de bu kültüre olan rahatsızlığımı ve karşılığında kendi fikirlerimi belirtmem için bir engel olduğunu da zannetmiyorum.
+</p>
+
+<p>
+Hem iş hem okul gereği sıkça karşılaşıyorum bu kavramlarla. Bir kod parçası düzgün çalışıyorsa sebebinin bu kurallara uyulması, çalışmıyorsa bu kurallara uyulmaması olarak görülüyor. Fakat kişisel gözlemlerim hiç de bu yönde değil. Bir kodun kararlılığı nesne yönelimli programlamadan neredeyse bağımsız şekilde değişenlik gösteriyor. Ve bir kod parçasının <em>anlaşılabilirliği</em> ile nesne yönelimli programlamaya uymak hemen hemen ters orantılı oluyor.
+</p>
+
+<p>
+Burada ufak bir bağlamdan bahsetmem gerekiyor bence. Benim kısa süreli hafızam, tabiricaizse zihinsel önbelleğim, oldukça küçük. Dolayısıyla bu önbelleğimden düzgünce yararlanabilmem için, aynı bir programın önbellekten faydalanma usûlü gibi, iki nitelikten yararlanmam gerekiyor:
+</p>
+
+<ol>
+<li>Zamansal yerellik
+</li>
+<li>Mekânsal yerellik
+</li>
+</ol>
+
+<p>
+Kodun yürütülmesi değil de kodun <em>anlaşılması</em> için bu ikisinin tezahürü oldukça basit oluyor. Bir kod zamansal yerelliğe sahipse, o kod kısa ve öz oluyor. İşini az miktarda kod ile gerçekleştiren bir işlevin üzerinde tekrar tekrar gezinince ister istemez sürekli önbelleğimi kullanır oluyorum. Bu sayede de sürekli olara kodu önbelleğime almak zorunda kalmıyorum. Bir kod mekânsal yerelliğe sahipse kodun gereklilikleri kodun yakınlarında oluyor. Yani bir kod parçasını okurken anlamam için okumam gereken başka kodlar birlikte bulunuyor. Nesne yönelimli programlamanın çalışma zamanındaki önbellek kullanımı konusunda sınıfta kaldığını hemen hepimiz biliyoruz, ama bence en büyük zararı yazılımcının önbelleğini kullanamaması. Eğer SOLID, DRY gibi kurallara uyacaksak; çok sayıda ufak sınıf yazmamız gerekiyor. Sonuç olarak bir kod parçasının tam olarak ne yaptığını anlamak için dosya dosya gezmemiz, belki onlarca sınıfın kodunu okumamız gerekiyor. Şayet <em>uymazsak</em>, bu sefer de zamansal yerellik bozuluyor ve okumam gereken kod miktarı artıyor.
+</p>
+
+<p>
+Peki bu dengeyi kazanmanın bir yolu yok mu? Bence var, ve yazılımcılar da gün geçtikçe bu yöntemlere meylediyor. Prosedürel programlama ve fonksiyonel programlamadan bahsediyorum. İkisi de aslında nesne yönelimli programlamadan çok daha eski kavramlar. İlki Turing makinesine, ikincisi ise lambda hesap sistemine denk geliyor. Yani bilgisayar biliminin teorisinden kök alıyor ikisi de. Aslında nesne yönelimli programlama, prosedürel programlamanın ölçeklenme sorununa karşılık ortaya çıkan bir çözüm. Prosedürel programlama hem bilgisayar için hem de insan için yerellik açısından oldukça başarılı aslında, yazılımı yazarkenki <em>eğilim</em> yakın kodun alakalı işler yapması oluyor. Veri durağan olup sürekli üzerinde işlem yapılıyor. Fonksiyonel programlamada ise veri <em>değişmez</em> oluyor, ayrıca doğası gereği öz kod yazmayı teşvik ediyor.
+</p>
+
+<p>
+Kendi kodlarımı yazarken bu iki yöntemin verimliliğini gözlemleme şansım oldu. Genel olarak işlevlerin bağımlılıklarını çok daha net görebildiğimi fark ettim. Ayrıca büyük bir işi yapan bir işlevin gereksinimleri aynı dosyada oluyor. Bu elbette tam olarak paradigmaya bağlı bir şey değil, iyi kod da kötü kod da yazılabilir her şekilde. Ama bu paradigmaların yazılımcıyı <em>yönlendirdiği</em> biçimler var, ben de prosedürel ve, özellikle büyük ölçekte, fonksiyonel programlamanın yazılımcıyı daha temiz ve sade kod yazmaya ittiğini düşünüyorum. Günün sonunda yazılımcının amacı detayları soyutlamak ve bilgisayara bu soyutlamaları uygulatmaktır. Bunun için sadece işlevler yani fonksiyonlar da yeterli olur. Lambda hesap sisteminin özünde yatan şey de bu nitekim: fonksiyon soyutlama ve uygulama. Yazının başında bahsettiğim terimlerin hepsi aslında fonksiyonların yaptığı şeylerin bazılarını yapabilen yöntemler. Bağımlılık çizgesi parametre listesinden ibaret olan fonksiyonların, ne azı ne fazlası, okunabilirlik olarak herhangi bir tasarım kalıbından sonsuz kat daha iyi olduğunu düşünüyorum. Kısacası, üzerine çalışılması zor olmayan bir kod yazmak istiyorsak yapmamız gereken şey o kodun anlaşılmak için ihtiyaç duyduğu bağlamı küçültmek olacaktır ki bunu yapmanın birçok yazılımcı için ilk aşaması da yazılımları nesne iletişimi olarak değil girdiler ve çıktılar olarak düşünmektir. Sadece büyük modüllerin sınırlarında encapsulation gibi yöntemleri uygulamak lazım.
+</p>
+
+            </article>
+    </div>
+    <div id="foot" class="status-bar">
+        <p id="tag-field" class="status-bar-field">
+            Etiketler: yazılım, nesne yönelimli programlama, fonksiyonel programlama, yazılım mimarisi, sinir
+        </p>
+        <p id="author-field" class="status-bar-field">
+            Yazan: Elif Sanem Ceyhan
+        </p>
+        <p id="date-field" class="status-bar-field">
+            Tarih: 2026-04-23 18:52:32 +0300 Prş
+        </p>
+    </div>
+</body>
+
+</html>
