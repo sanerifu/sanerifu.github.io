@@ -41,3 +41,72 @@ Bu karşı kalıbın kullanıldığı yer de burası oluyor işte. Arayüzdeki b
 En büyük sorunlarından birisi büyük ihtimalle performans. Birçok arayüz sistemi düzenin (_layout_) değişmesine uygun şekilde tasarlanıyor ama yapının (_structure_) değişmesi çok fazla optimize edilmeyebiliyor. Ki bunu optimize etmek muhtemelen düzeni optimize etmekten belirgin derecede daha zordur. Ayrıca birçok arayüz sisteminde arayüz tanımlanirken hiyerarşi olarak tanımlanıyor. Eğer bu hiyerarşi zaman içerisinde değişebiliyorsa olası arayüz hatalarını bulmak da belirgin derecede daha zor olabiliyor, bir element kodda görünen elementin altında yer almayabiliyor çünkü. 
 
 Çözüm her zaman mümkün değil aslında. Teknik olarak bazı arayüz değişimleri için gerçekten hiyerarşiyi değiştirmek gerekiyor. Ama bu karşı kalıbın kullanıldığı birçok durumda aslında gerekmiyor. Arayüz modellemesini kafada düzgünce yapmak için düşünmek gerekiyor sonuçta. Bir düğümü açık veya kapalı konuma getirmek, bir düğümü gerekirse her seferinde yeniden oluşturmak gibi basit yöntemler ile genel olarak engellenebilir bu karşı kalıp.
+
+## Akarsu
+
+Bu karşı kalıbın ismini bulmak biraz zorladı açıkçası. Akışkanlık üzerinden düşündüm biraz, çünkü bahsetmek istediğim temel sorun biçimsizlik daha çok.
+
+Hepimizin, veya çoğumuzun, bildiği üzere popüler dillerin hemen hepsinde belli durağan bir tip sistemi vardır. Anaakım diller arasında Python ve JavaScript, biraz da PHP istisna olsa gerek. Bu diller dinamik tipli diller, yani bir değişkenin türü kodun kendisine bakarak tam olarak anlaşılamıyor. Üç dilin ortak özelliklerinden birisi de üçünün de statik tip sistemlerine yönelmiş olması aynı zamanda. Python ve PHP'de derleme zamanında zorlanmasa da tipleri yazabiliyoruz (PHP'den tam emin değilim ama yeni sürümlerinde buna benzer bir özellik olması lazım), JavaScript'te bu olmasa da yaygınlıkta kendisiyle yarışan TypeScript tam olarak bu sorunu çözmek için oluşturulmuş bir dil. Bu eğilimin en büyük sebebi, dinamik tipli dillerde program yazmanın genel kanının aksine zor olması.
+
+İnsan, doğası gereği hata yapmaya oldukça müsait bir varlık. Yazılım yazarken, özellikle de hızlı yazarken, sıkça hata yaparız. Bu hataların aslında oldukça ufak bir kısmı yazım hataları gibi yerel hatalardır. Noktalı virgül unutmak, değişkenin ismini yanlış yazmak arada sırada yapacağımız hatalar ama çok sık gerçekleşmez. Asıl hatalar mantık hatalarıdır aslında. Elimizde tipler yokken, yani yazdığımız dil dinamik tipliyken, bu tarz hataları yapma şansımız çok yüksek olur. Olmayan bir yere erişmek, olmayan bir metodu çağırmak, metoda yanlış argümanları vermek dinamik dillerde sıkça gerçekleşir. Ve elimizdeki geliştirme ortamı bunu tespit edemezse çok kolay şekilde bu hatalar gözümüzden kaçabilir. Statik tipli dillerde bu hataları derleyici fark eder ve hemen gösterir. Ayrıca tipleri illa yazmak zorunda olduğumuz için de geliştirme ortamımız yüksek ihtimalle yaptığımız gibi bu hatayı yüzümüze vurur.
+
+Tamam; iyi hoş güzel; o zaman C++, Java, C\# kullanalım; hatta Rust, OcaML, Haskell yazalım mümkünse. Açıkçası ben de buna katılıyorum, güçlü bir tip sistemi bir sistemi yazacağımız dili belirlerken önemli bir etken olmalıdır bana kalırsa. Fakat madem böyle bir dil kullanılacak, bu dilin tip garantilerinden faydalanılmalıdır da.
+
+Gözlemlediğim karşı kalıplardan birisi de yukarıdaki gibi güçlü ve statik tipli dillere dinamiklik getirmek. Elbette arayüzler (_interface_) veya onların biraz daha iyileştirilmiş hâli olan niteliklerin (_trait_) kullanılması belirgin bir sorun değil tek başına, çalışma zamanı çokbiçimliliği (_runtime polymorphism_) kesinlikle kullanılabilir bir yaklaşım bazı durumlarda, Sanal Aşiret gibi kullanılmadığı sürece. Benim bahsettiğim sorun, bir bakıma bir `struct` veya `class` kullanılabilecek durumda gidip sözlük (_dictionary_) kullanmak.
+
+```cpp
+struct Foo {
+    int x;
+    int y;
+};
+
+Foo a;
+```
+
+yerine
+
+```cpp
+std::map<std::string, int> a;
+```
+
+kullanmak mesela. Eğer gerçekten çalışma zamanında belli olan metinlerin tamsayı değerleri olacaksa bunda bir sorun yok, ama kodun her yerinde `a.x` yerine `a["x"]` yazılacaksa o iş olmaz işte.
+
+`a` değişkenini daha da kötü hâle getirebiliriz: `std::map<std::string, std::any> a`. Evet, artık `a`'da aklımızda tutmamız gereken tek şey `x` ve `y` değil, aynı zamanda bu değişkenlerin türleri de. `std::map<std::string, std::any>` aslında baya güçlü bir tip, C++'ta yazacağımız hemen her türlü `struct`'ı tutabilme gücüne sahip. Bu da ne yazık ki bazı insanlar için çekici geliyor. Düşünsenize, bir değişkenin tipini sadece oluşturan ve kullanan biliyor, aradakiler ne olduğunu bilmek zorunda değil! Tip silme (_type erasure_) oluyor burada, tipleri derleyiciye _unutturuyoruz_.
+
+Bu karşı kalıbın iki kötü yanı var diğerlerinde olduğu gibi: anlaşılabilirlik ve performans. Neyin ne olduğu gerçek anlamda çalışma zamanında belli olduğu için oluşturan değiştiğinde derleyici kullananın eski ve yanlış değişkenleri ve türleri kullandığını görmüyor. Eğer bu iki kod parçası farklı kişilerin elindeyse vay hâlimize! Bir taraf değiştiriyor öteki tarafın haberi olmuyor. Performans açısından da büyük falso, her değişken erişimi hash işlemi uyguluyor, tam olarak arka arkaya olmayan bir dizi içerisinde arama yapıyor (bu sabit zamanlı, eğer `std::map` gibi ağaç yapısı kullanıyorsa logaritmik zaman oluyor!), üzerine bir de `std::any` nedeniyle çalışma zamanlı tip bilgisi (_runtime type information_, _RTTI_) üzerinden bilgisayar hesap yapıp doğru türü buluyor. Bunların hepsi de bir tane tamsayı elde etmek için! Android gibi platformlarda da RTTI sorunlu üstüne üstlük!
+
+Bunun iki çözümü var. Tip bilgisini görece saklamak istiyorsak ileri belirtmeler (_forward declaration_) ve pImpl metodu kullanılabilir. Mesela:
+
+```cpp
+struct MyUnrelatedType1;
+struct MyUnrelatedType2;
+
+struct Bar {
+    MyUnrelatedType1& getField1();
+    MyUnrelatedType2& getField2();
+    ~Bar();
+private:
+    std::unique_ptr<struct BarImpl> m;
+};
+```
+
+Sadece tek bir cpp dosyasına:
+
+```cpp
+struct BarImpl {
+    MyUnrelatedType1 field1;
+    MyUnrelatedType2 field2;
+};
+
+Bar::~Bar() {}
+
+Bar::getField1() { return m->field1; }
+Bar::getField2() { return m->field2; }
+```
+
+Elbette bu şekilde yazınca `std::map` koymaktan _çok_ daha uzun görünüyor. Evet doğru, ama bu fazlalık kod bizi ileride çok büyük baş ağrılarından koruyor. `field1` `MyUnrelatedType1` yerine `MyOtherType` olursa veya ismi `za_field` olursa ya buna uygun fonksiyon kılıfı uydurmamız gerekiyor ya da kullanan kodları da uygun şekilde değiştirmemiz gerekiyor. Çalışma zamanı hatası değil, derleme zamanı hatası oluyor yani!
+
+Eğer `MyUnrelatedType1` vs. bizim diğerlerine açabileceğimiz bir tip ise işler çok daha basitleşiyor aslında. Basit bir `struct` kullanınca sorun çözülüyor!
+
+Bu karşı kalıp diğerlerinin aksine daha az düşünmeden ziyade daha az kod yazma üzerine kurulu aslında. Dolayısıyla çözmesi görece daha kolay denebilir. Direkt doğru yöntemin kodunu biraz daha klavyedeki tuşlara basıp yazınca çözülüyor.
+
