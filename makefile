@@ -1,4 +1,4 @@
-lua := lua
+lua := luajit
 converter := esbeg.lua
 dir := posts/
 template := $(dir)template.html
