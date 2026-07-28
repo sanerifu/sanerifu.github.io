@@ -1,4 +1,4 @@
-@@@date = 2026-06-14 20:54:31 +0300 Sun
+@@@date = 2026-06-14 20:54:31 +0300 Paz
 @@@authors = Elif Sanem Ceyhan
 @@@tags = yazılım; nesne yönelimli programlama; yazılım mimarisi
 

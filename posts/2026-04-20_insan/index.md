@@ -1,4 +1,4 @@
-@@@date = 2026-04-20 21:57:55 +0300 Pazartesi
+@@@date = 2026-04-20 21:57:55 +0300 Pzt
 @@@authors = Elif Sanem Ceyhan
 @@@tags = insanlık; çalışmak; ütopya; üretim; ekonomi; felsefe
 

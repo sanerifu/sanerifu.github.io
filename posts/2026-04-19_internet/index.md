@@ -1,4 +1,4 @@
-@@@date = 2026-04-19 23:05:33 +0300 Pazar
+@@@date = 2026-04-19 23:05:33 +0300 Paz
 @@@authors = Elif Sanem Ceyhan
 @@@tags = internet; http; duygular; düşünceler
 
