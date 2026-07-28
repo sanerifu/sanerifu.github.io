@@ -1,0 +1,17 @@
+@@@authors = Elif Sanem Ceyhan
+
+# Hakkımda
+
+Ben Elif Sanem (kısaca Elif). Yarışmaya Ankara'dan katılıyorum. 2002 doğumluyum (her doğum günümde bu sayfayı güncellemek istemiyorum).
+
+Şu hayatta hiçbir şeyi sevmedim bilgisayar kadar. Yani, eh, en sevdiğim mi bilmiyorum ama çok bir sevdiğim alan diyebilirim. Kişiliğimin nereden baksanız şöyle büyük bir kısmını bilgisayar oluşturuyor hatta.
+
+Tam net olmamakla birlikte üç yaşımdan beridir bilgisayarlarla haşır neşir olageldim (-egelmek çekimini Batı dillerindeki tamamlanmış zaman olarak kullanma huyum var, biraz tuhaf ama deve-eğri-doğru atasözü durum). İlk kez yazılım ile tanışmam yaklaşık altıncı sınıfta Microsoft'un (şu anda kapanmış durumda olan) Açık Akademi adlı site/program/girişimi ile oldu. C#'ın nesne yönelimli programlama taraflarına girdikten sonra pek hoşuma gitmemeye başladığı için bu noktadan sonra çok dokunmadım.
+
+Ta ki lise birinci sınıfta programlama kulübü sayesinde C ile tanışana kadar. Her ne kadar programlama hobime üst dönemimizin gözlemi ve yardımı eşliğinde birtakım rekabetçi programlama (_competitive programming_) soruları çözerek başlamış olsam da bir süre sonra rekabetçi programlamadan da uzaklaştım. Fakat ok yaydan çıkmıştı artık, genel olarak lise boyunca gerek ufak tefek programlar yazarak gerek de düz teorik araştırma yaparak genel olarak yazılım konusunda kendimi geliştirmeye başladım. Daha doğrusu öğrenme arzuma yenik düştüm diyebilirim. O gün bu gündür hayâlimdeki programlama dilini arar dururum. Şöyle C gibi Lua gibi bir şey olmalı ama Rust kadar güvenli olmalı ama C# kadar da kolay yazılmalı falan.
+
+Üniversitede bilgisayar mühendisliğine girince hobim dersim hâline geldi. Hiçbir baskı olmadan keyfî şekilde internette okuduğum yazılım konseptleri artık ders notum olduğu için belli bir yorgunluk gelmedi diyemem. Fakat ikinci sınıfta bilgisayarlı grafik (_computer graphics_) ile tanışmamla birlikte biraz daha özelleşmeye yöneldim. Aynı dönemlerde programlama dilleri ve derleyicilerle de ilgilenmeye başladım. Nitekim lisans sırasında aldığım 5 seçmeli dersin 4'ü (3 grafik 1 derleyici) bu iki alan üzerine oldu, okulumda ne lisans ne yüksek lisans seviyesinde bu alanlarda ders kalmadığı için sonuncuyu farklı almak zorunda kaldım. Hâlâ daha ilgilendiğim temel iki alan bunlar olmakla birlikte saçma sapan şeyler denerken beni bulmanız pek de zor olmayacaktır kesinlikle.
+
+Kişiliğimin kalan kısımlarından da bahsetmem gerekirse ilki Türk halk müziği olacaktır. Bebekken _Eledim Eledim Höllük Eledim_ ile uyutulmam dahil olmak üzere hayatımın hemen her zamanında evin içerisinde bir halk müziği varlığı olageldi. Nitekim beşinci sınıftan itibaren bağlama kursuna gittim, liseye geçerken bıraktım. Çalış seviyeme "meh" diyebilirim. Aynı zamanda ortaokulda tam hatırlamadığım bir zamandan beridir çalarken söylüyorum ama hem ses eğitimsizliğimden hem de ton algılama sorunlarımdan ötürü kolay kolay doğru sesleri çıkaramıyorum.
+
+Burayı ne kadar güncellerim bilmiyorum. Hakkımda büyük bir şeyler değişirse olabilir. Küçük değişiklikler CV'lik daha çok.
