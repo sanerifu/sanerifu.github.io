@@ -7,39 +7,51 @@ const count_field = document.getElementById("post-count-field")
 /** @type {HTMLInputElement} */
 const search = document.getElementById("searchbar");
 
-/** @type {HTMLSpanElement} */
-const notification = document.getElementById("notification-count");
-
 function addEntries(index) {
     post_data.replaceChildren();
     for (let entry of index) {
-        let date_string = entry.date ? entry.date[0] : "";
-        let name_string = entry.title ? entry.title[0] : "";
-        let author_string = entry.authors ? entry.authors.join(", ") : "";
-        let tags_string = entry.tags ? entry.tags.join(", ") : "";
+        let row = document.createElement('li');
 
-        let row = document.createElement('tr');
+        let top_row = document.createElement('a');
+        top_row.classList.add("post-title-date");
+        top_row.href = `/${entry.path}`;
+        let name = document.createElement('span');
+        let date = document.createElement('div');
 
-        let date = document.createElement('td');
-        let name = document.createElement('td');
-        let author = document.createElement('td');
-        let tags = document.createElement('td');
+        let bottom_row = document.createElement('div')
+        let author = document.createElement('span');
+        let tags = document.createElement('ul');
 
-        date.innerHTML = `<a href="/${entry.path}">${date_string}</a>`;
-        name.innerHTML = `<a href="/${entry.path}">${name_string}</a>`;
-        author.innerHTML = `<a href="/${entry.path}">${author_string}</a>`;
-        tags.innerHTML = `<a href="/${entry.path}">${tags_string}</a>`;
+        let date_string = entry.date ? entry.date[0]: "";
 
+        name.innerHTML = entry.title ? entry.title[0] : "";
+        date.innerHTML = date_string;
+        author.innerHTML = entry.authors ? entry.authors.join(", ") : "";
+
+        if(entry.tags) {
+            for(let tag_string of entry.tags) {
+                let tag = document.createElement('li');
+                tag.innerText = tag_string;
+                tags.append(tag);
+            }
+        }
+
+        name.classList.add("post-name");
+        date.classList.add("post-date");
+
+        top_row.append(name);
+        
+        bottom_row.append(author);
+        bottom_row.append(tags);
+        
+        row.append(top_row);
         row.append(date);
-        row.append(name);
-        row.append(author);
-        row.append(tags);
+        row.append(bottom_row);
 
         post_data.append(row);
     }
 
     count_field.textContent = `${index.length} gönderi`;
-    notification.textContent = `${index.length} gönderi`;
 }
 
 addEntries(__INDEX__.toSorted((lhs, rhs) => {

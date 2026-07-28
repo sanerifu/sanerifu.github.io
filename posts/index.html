@@ -10,56 +10,20 @@
 </head>
 
 <body>
-    <div id="notificationbar"><a href="/">Sanerifu</a><span id="notification-count"></span></div>
-    <ul id="menubar" role="menubar">
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
-            Pages
-            <ul role="menu">
-                <li role="menuitem">
-                    <a href="/">
-                        Home
-                    </a>
-                </li>
-                <li role="menuitem">
-                    <a href="/posts">
-                        Posts
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
-            Help
-            <ul role="menu">
-                <li role="menuitem"><a href="/about">About</a></li>
-            </ul>
-        </li>
-    </ul>
+    <div id="page-header"><a href="/">Sanerifu</a></div>
+    <nav>
+        <span><a href="/posts">Gönderiler</a></span>
+        <span><a href="/about">Hakkımda</a></span>
+    </nav>
 
     <div id="search-box">
-        <input id="searchbar" type="search" placeholder="Gönderilerde Ara" />
-    </div>
-    <div id="result-container">
-        <table class="clickable-table">
-            <colgroup>
-                <col style="width: 10%;" />
-                <col style="width: 40%;" />
-                <col style="width: 25%;" />
-                <col style="width: 25%;" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>Tarih</th>
-                    <th>Gönderi</th>
-                    <th>Yazar</th>
-                    <th>Etiketler</th>
-                </tr>
-            </thead>
-            <tbody id="post-data"></tbody>
-        </table>
+        <input id="searchbar" placeholder="Gönderilerde Ara" />
     </div>
 
-    <div id="foot" class="status-bar">
-        <p id="post-count-field" class="status-bar-field"></p>
+    <div id="post-count-field" class="status-bar-field"></div>
+
+    <div id="result-container">
+        <ul id="post-data"></ul>
     </div>
 </body>
 
