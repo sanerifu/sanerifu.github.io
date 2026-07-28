@@ -1,4 +1,4 @@
-lua := luajit
+lua := $(shell command -v luajit 2>/dev/null || echo lua)
 converter := esbeg.lua
 dir := posts/
 template := $(dir)template.html
