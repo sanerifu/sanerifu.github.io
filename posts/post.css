@@ -1,86 +1,115 @@
-@import url("/mobile.css") (orientation: portrait);
-@import url("/desktop.css") (orientation: landscape);
-
-body {
-    background: linear-gradient(to bottom,
-            #c2cedd 0%,
-            #dce6f2 100%);
-    background-attachment: fixed;
+@font-face {
+    font-family: "Comic Relief";
+    src: url("/ComicRelief-Regular.ttf");
 }
 
-@media (orientation: portrait) {
-    #content {
-        background-color: white;
-        flex: 1;
-        padding-left: 2vw;
-        padding-right: 2vw;
-        padding-top: 1vh;
-        padding-bottom: 1vh;
-        text-align: justify;
-    }
-
-    #foot {
-        display: none;
-    }
+:root {
+    --bg-color: #FAFAFA;
+    --text-color: #222222;
+    --link-color: #0033CC;
+    --link-hover: #001166;
+    --border-color: #DDDDDD;
 }
 
 @media (orientation: landscape) {
-    #content {
-        width: 50vw;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: white;
-        flex: 1;
-        padding-left: 1vw;
-        padding-right: 1vw;
-        padding-top: 1vh;
-        padding-bottom: 1vh;
-        text-align: justify;
-        box-shadow:
-            10px 0px 5px -2px rgba(0, 0, 0, 0.25),
-            /* 1px 0px 5px rgba(0, 0, 0, 0.25), */
-            -10px 0px 5px -2px rgba(0, 0, 0, 0.25)
-            /* -1px 0px 5px rgba(0, 0, 0, 0.25); */
+    :root {
+        --font-size: 1rem;
     }
-
 }
 
-article img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+@media (orientation: portrait) {
+    :root {
+        --font-size: 2.5rem;
+    }
 }
 
-article figure p {
+body {
+    font-family: "Comic Relief", "Comic Sans MS", cursive, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+
+    max-width: 56rem;
+    margin: 5vh auto;
+    padding: 0 1rem;
+
+    line-height: 1.5;
+    font-size: var(--font-size);
+    text-align: justify;
+    hyphens: auto;
+}
+
+#page-header {
+    font-weight: bold;
     text-align: center;
+    font-size: 3em;
+}
+
+nav {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: #000000;
+    line-height: 1.2;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
 }
 
 header {
     text-align: center;
-    font-size: 4em;
+    font-size: 1.5em;
     font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
-#menubar * {
-    user-select: none;
+p,
+ul,
+ol {
+    margin-bottom: 1.2em;
 }
 
-#foot {
-    position: sticky;
-    width: 100%;
-    bottom: 0;
-    margin: 0;
-    border: 0;
-    border-top: 1px solid var(--w7-w-bd);
+blockquote {
+    border-left: 3px solid #999;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #555;
 }
 
-#tag-field {
-    flex-grow: 1;
+code,
+pre {
+    font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+    font-size: 0.9em;
 }
 
-#author-field,
-#date-field {
-    flex-grow: 0;
-    padding-left: 1vw;
-    padding-right: 1vw;
+code {
+    background-color: #EEEEEE;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+pre {
+    background-color: #F4F4F4;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border-color);
+    display: block;
+    margin: 1.5em 0;
 }

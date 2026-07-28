@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head lang="tr">
     <meta charset="utf-8" />
     <title>
         Sade Kod
@@ -10,35 +10,16 @@
 </head>
 
 <body>
-    <div id="notificationbar"><a href="/">Sanerifu</a><span id="notification-date">2026-04-23 18:52:32 +0300 Prş</span></div>
-<ul id="menubar" role="menubar">
-    <li role="menuitem" tabindex="0" aria-haspopup="true">
-        Pages
-        <ul role="menu">
-            <li role="menuitem">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            <li role="menuitem">
-                <a href="/posts">
-                    Posts
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li role="menuitem" tabindex="0" aria-haspopup="true">
-        Help
-        <ul role="menu">
-            <li role="menuitem"><a href="/about">About</a></li>
-        </ul>
-    </li>
-</ul>
+    <div id="page-header"><a href="/">Sanerifu</a></div>
+<nav>
+    <span><a href="/posts">Gönderiler</a></span>
+    <span><a href="/about">Hakkımda</a></span>
+</nav>
 
-    <div id="content">
-        <header>Sade Kod</header>
-            <article>
-                <p>
+        <div id="content">
+            <header>Sade Kod</header>
+                <article>
+                    <p>
 Factory, interface, ABC, kalıtım, encapsulation... Nesne yönelimli programlama yazılımcıların hayatına çok sayıda terim soktu diyebiliriz. Büyük yazılımların mimarisini kurmak her zaman için zor olmuştur. Başlı başına bir beceri olduğu gibi birçok ürünün zaman içerisinde yitip gitmesi ile hayatını sürdürmesi arasındaki ince çizgi de mimarilerinin ne seviyede iyi veya kötü olduğuna bağlı. Yazılım fazlasıyla toy bir alan olduğu için bir şeyleri kurarken tam olarak ne yapmamız gerektiğini kimse tam anlamıyla bilmiyor. Binlerce yıllık mühendislik alanlarında dahi bilgi dağarcığında açıklıklar ortaya çıkabiliyorken kurucularının bazıları aramızda dolaşan bilgisayar biliminin bu sancıları çekmesi çok anormal değil sanki.
 </p>
 
@@ -73,19 +54,19 @@ Peki bu dengeyi kazanmanın bir yolu yok mu? Bence var, ve yazılımcılar da g�
 Kendi kodlarımı yazarken bu iki yöntemin verimliliğini gözlemleme şansım oldu. Genel olarak işlevlerin bağımlılıklarını çok daha net görebildiğimi fark ettim. Ayrıca büyük bir işi yapan bir işlevin gereksinimleri aynı dosyada oluyor. Bu elbette tam olarak paradigmaya bağlı bir şey değil, iyi kod da kötü kod da yazılabilir her şekilde. Ama bu paradigmaların yazılımcıyı <em>yönlendirdiği</em> biçimler var, ben de prosedürel ve, özellikle büyük ölçekte, fonksiyonel programlamanın yazılımcıyı daha temiz ve sade kod yazmaya ittiğini düşünüyorum. Günün sonunda yazılımcının amacı detayları soyutlamak ve bilgisayara bu soyutlamaları uygulatmaktır. Bunun için sadece işlevler yani fonksiyonlar da yeterli olur. Lambda hesap sisteminin özünde yatan şey de bu nitekim: fonksiyon soyutlama ve uygulama. Yazının başında bahsettiğim terimlerin hepsi aslında fonksiyonların yaptığı şeylerin bazılarını yapabilen yöntemler. Bağımlılık çizgesi parametre listesinden ibaret olan fonksiyonların, ne azı ne fazlası, okunabilirlik olarak herhangi bir tasarım kalıbından sonsuz kat daha iyi olduğunu düşünüyorum. Kısacası, üzerine çalışılması zor olmayan bir kod yazmak istiyorsak yapmamız gereken şey o kodun anlaşılmak için ihtiyaç duyduğu bağlamı küçültmek olacaktır ki bunu yapmanın birçok yazılımcı için ilk aşaması da yazılımları nesne iletişimi olarak değil girdiler ve çıktılar olarak düşünmektir. Sadece büyük modüllerin sınırlarında encapsulation gibi yöntemleri uygulamak lazım.
 </p>
 
-            </article>
-    </div>
-    <div id="foot" class="status-bar">
-        <p id="tag-field" class="status-bar-field">
-            Etiketler: yazılım, nesne yönelimli programlama, fonksiyonel programlama, yazılım mimarisi, sinir
-        </p>
-        <p id="author-field" class="status-bar-field">
-            Yazan: Elif Sanem Ceyhan
-        </p>
-        <p id="date-field" class="status-bar-field">
-            Tarih: 2026-04-23 18:52:32 +0300 Prş
-        </p>
-    </div>
+                </article>
+        </div>
+        <div id="foot" class="status-bar">
+            <p id="tag-field" class="status-bar-field">
+                Etiketler: yazılım, nesne yönelimli programlama, fonksiyonel programlama, yazılım mimarisi, sinir
+            </p>
+            <p id="author-field" class="status-bar-field">
+                Yazan: Elif Sanem Ceyhan
+            </p>
+            <p id="date-field" class="status-bar-field">
+                Tarih: 2026-04-23 18:52:32 +0300 Prş
+            </p>
+        </div>
 </body>
 
 </html>

@@ -71,7 +71,7 @@ package.preload['markdown'] = function()
         ---@param block string
         ---@return string
         codeBlock = function(type, block)
-            return ("<code style=\"white-space: pre;\" type=\"%s\">%s</code>"):format(type, block)
+            return ("<pre style=\"white-space: pre;\" type=\"%s\">%s</pre>"):format(type, block)
         end,
 
         ---@return string start

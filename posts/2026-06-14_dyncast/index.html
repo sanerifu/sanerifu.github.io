@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head lang="tr">
     <meta charset="utf-8" />
     <title>
         dynamic_cast hk.
@@ -10,49 +10,30 @@
 </head>
 
 <body>
-    <div id="notificationbar"><a href="/">Sanerifu</a><span id="notification-date">2026-06-14 20:54:31 +0300 Sun</span></div>
-<ul id="menubar" role="menubar">
-    <li role="menuitem" tabindex="0" aria-haspopup="true">
-        Pages
-        <ul role="menu">
-            <li role="menuitem">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            <li role="menuitem">
-                <a href="/posts">
-                    Posts
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li role="menuitem" tabindex="0" aria-haspopup="true">
-        Help
-        <ul role="menu">
-            <li role="menuitem"><a href="/about">About</a></li>
-        </ul>
-    </li>
-</ul>
+    <div id="page-header"><a href="/">Sanerifu</a></div>
+<nav>
+    <span><a href="/posts">Gönderiler</a></span>
+    <span><a href="/about">Hakkımda</a></span>
+</nav>
 
-    <div id="content">
-        <header>dynamic_cast hk.</header>
-            <article>
-                <p>
+        <div id="content">
+            <header>dynamic_cast hk.</header>
+                <article>
+                    <p>
 Yeterince C++ kullanmış herkes muhtemelen <code>dynamic_cast</code> gibi özellikleri görmüştür. Genel olarak öğretilen işlevi, bir sınıfı kendisinin alt sınıfına döndürmek.
 </p>
 
-<code style="white-space: pre;" type="cpp">class A {};
+<pre style="white-space: pre;" type="cpp">class A {};
 class B : public A {};
-</code>
+</pre>
 
 <p>
 diye tanımlanmışken
 </p>
 
-<code style="white-space: pre;" type="cpp">std::unique_ptr&lt;A&gt; a = std::make_unique&lt;B&gt;();
+<pre style="white-space: pre;" type="cpp">std::unique_ptr&lt;A&gt; a = std::make_unique&lt;B&gt;();
 B* b = dynamic_cast&lt;B*&gt;(a.get());
-</code>
+</pre>
 
 <p>
 şeklinde kullanabiliyoruz. Eğer <code>a</code> değişkeni gerçekten <code>B</code> olarak oluşturulmuşsa <code>b</code> gerçekten <code>B</code> işaretçisi olur ve doğru yeri gösterir, yani <code>std::make_unique</code> kısmının gerçekten oluşturduğu işaretçinin kendisini döner. Eğer değilse <code>nullptr</code> döner. Oldukça basit, değil mi?
@@ -74,19 +55,19 @@ Sorunların ilki, bu vtable'ın <code>dynamic_cast</code> ile birlikte iletişim
 Ne yazık ki C++'ın bu durum için güzel bir çözümü yok. Eğer gerçekten bir sınıfın belli niteliklerine sadece varlarsa erişmek gibi bir ihtiyacımız varsa, öncelikle birkaç kere  daha bu ihtiyaç üzerine düşünmek gerekir, gerçekten buna ihtiyaç var mı yoksa kodu lağım çukuru gibi yazdığımız için mi gerekiyor diye. Eğer her şekilde cevabımız ilki ise, bu gereksinimi koda dökmek en doğrusu olur. Ama vtable mantığında bu pek kolay değil, dolayısıyla C++'ta yapmak hiç de basit değil. C gibi bir dil kullanıyorsak zaten çokbiçimliliği kendimiz yazdığımız için vtable mantığından en başta uzak durmak daha doğru olacaktır. Bunun yerine şişaretçi (şişman işaretçi, <em>fat pointer</em>) kullanmak daha kolay kılacaktır hayatımızı. Basitçe; çokbiçimli bir cismi, o cismi gösteren işaretçinin yanında vtable'ın kendisini yollama yöntemi oluyor bu. Vtable'ı verinin yanından çıkarmış oluyoruz bir bakıma. Eğer opsiyonel bir arayüz istiyorsak, bunu fonksiyonun imzasında belirtmek gerekir, eğer boş bir değer verilirse (örn. <code>nullptr</code>), ona göre davranabiliriz. Diğer bazı popüler dillerde de (Rust, Go) buna tam karşılık gelen bir mantık bulamadım. Genel olarak karşılaşılmaması gereken bir problem aslında, ama karşılaşılırsa düzgün çözümü bu. Elbette eğer mümkünse açık çokbiçimliliği (<em>open polymorphism</em>) kapalı çokbiçimliliğe (<em>closed polymorphism</em>) çevirmek en mantıklısı. Arayüz kavramı yerine toplam tipleri (<em>sum type</em>) kullanarak bütün ihtimalleri belirtmek daha doğru olacaktır.
 </p>
 
-            </article>
-    </div>
-    <div id="foot" class="status-bar">
-        <p id="tag-field" class="status-bar-field">
-            Etiketler: yazılım, nesne yönelimli programlama, yazılım mimarisi
-        </p>
-        <p id="author-field" class="status-bar-field">
-            Yazan: Elif Sanem Ceyhan
-        </p>
-        <p id="date-field" class="status-bar-field">
-            Tarih: 2026-06-14 20:54:31 +0300 Sun
-        </p>
-    </div>
+                </article>
+        </div>
+        <div id="foot" class="status-bar">
+            <p id="tag-field" class="status-bar-field">
+                Etiketler: yazılım, nesne yönelimli programlama, yazılım mimarisi
+            </p>
+            <p id="author-field" class="status-bar-field">
+                Yazan: Elif Sanem Ceyhan
+            </p>
+            <p id="date-field" class="status-bar-field">
+                Tarih: 2026-06-14 20:54:31 +0300 Sun
+            </p>
+        </div>
 </body>
 
 </html>

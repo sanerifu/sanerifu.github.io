@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head lang="tr">
     <meta charset="utf-8" />
     <title>
         <@ title=> $$ @>
@@ -11,24 +11,24 @@
 
 <body>
     <# menubar.html #>
-    <div id="content">
-        <@ title=>
-            <header>$$</header> @>
-            <article>
-                <@ body=> $$ @>
-            </article>
-    </div>
-    <div id="foot" class="status-bar">
-        <p id="tag-field" class="status-bar-field">
-            <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
-        </p>
-        <p id="author-field" class="status-bar-field">
-            <@ authors?=>Yazan: @> <@ authors=> $$ @, >
-        </p>
-        <p id="date-field" class="status-bar-field">
-            <@ date?=> Tarih: @> <@ date=> $$ @, >
-        </p>
-    </div>
+        <div id="content">
+            <@ title=>
+                <header>$$</header> @>
+                <article>
+                    <@ body=> $$ @>
+                </article>
+        </div>
+        <div id="foot" class="status-bar">
+            <p id="tag-field" class="status-bar-field">
+                <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
+            </p>
+            <p id="author-field" class="status-bar-field">
+                <@ authors?=>Yazan: @> <@ authors=> $$ @, >
+            </p>
+            <p id="date-field" class="status-bar-field">
+                <@ date?=> Tarih: @> <@ date=> $$ @, >
+            </p>
+        </div>
 </body>
 
 </html>
