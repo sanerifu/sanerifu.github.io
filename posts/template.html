@@ -11,14 +11,14 @@
 
 <body>
     <# menubar.html #>
-        <div id="content">
+        <div id="content" class="section">
             <@ title=>
                 <header>$$</header> @>
                 <article>
                     <@ body=> $$ @>
                 </article>
         </div>
-        <div id="foot" class="status-bar">
+        <div id="foot" class="status-bar section">
             <p id="tag-field" class="status-bar-field">
                 <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
             </p>
