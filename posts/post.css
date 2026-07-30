@@ -13,7 +13,7 @@
     --bg-image: url("/tile.svg");
     --text-color: #222222;
     --border-color: #DDDDDD;
-    --link-hover-color: #FFE5D1;
+    --link-hover-color: #EFC7C5;
 }
 
 @media (orientation: landscape) {
