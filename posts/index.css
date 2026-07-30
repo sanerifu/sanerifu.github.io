@@ -20,7 +20,15 @@
 }
 
 .post-name {
-    width: 100%;
-    display: inline-block;
     text-decoration: underline;
 }
+
+#post-data {
+    list-style: none;
+    padding: 0;
+}
+
+#post-data > li:not(:last-child) {
+    border-bottom: 1px solid black;
+}
+
