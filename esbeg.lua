@@ -323,6 +323,7 @@ for line in input:gmatch("(.-)\n") do
         metadata[key] = val
     elseif not metadata.title and title then
         metadata.title = { trim(title) }
+        metadata["page-title"] = { trim(title) }
     elseif title then
     else
         table.insert(input_array, (line:gsub("^%#(%#+)", "%1")))
@@ -355,7 +356,6 @@ local output =
                 local included = false
                 for var in varname:gmatch("(%a+)%s*%|?") do
                     included = included or (metadata[var] and #metadata[var] > 0 or false)
-                    io.stderr:write(("%q %q %q %s\n"):format(var, varname, expression, included and "true" or "false"))
                 end
                 return included and expression:gsub("%%", "%%%%") or ""
             end

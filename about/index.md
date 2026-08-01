@@ -1,6 +1,5 @@
 @@@authors = Elif Sanem Ceyhan
-
-# Hakkımda
+@@@page-title = Hakkımda
 
 Ben Elif Sanem (kısaca Elif). Yarışmaya Ankara'dan katılıyorum. 2002 doğumluyum (her doğum günümde bu sayfayı güncellemek istemiyorum).
 
