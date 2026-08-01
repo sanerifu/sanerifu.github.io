@@ -68,12 +68,14 @@ nav {
     justify-content: center;
 }
 
-nav a, #page-header a {
+nav a,
+#page-header a {
     padding: calc(1vh + 4px) calc(2vw + 4px);
     margin: 0.25vh 0.5vw;
 }
 
-nav a:hover, #page-header a:hover {
+nav a:hover,
+#page-header a:hover {
     background-color: var(--link-hover-color);
     color: black;
     text-decoration: none;
@@ -125,24 +127,27 @@ blockquote {
     color: #555;
 }
 
-code,
-pre {
+code {
     font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
     font-size: 0.9em;
 }
 
-code {
+code.inline-code {
     background-color: #EEEEEE;
     padding: 0.1em 0.3em;
     border-radius: 3px;
+    display: inline;
+    white-space: pre;
 }
 
-pre {
+code.block-code {
     background-color: #F4F4F4;
     padding: 1rem;
     overflow-x: auto;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    display: block;
+    white-space: pre;
 }
 
 pre code {

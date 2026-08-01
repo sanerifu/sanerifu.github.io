@@ -1,6 +1,16 @@
 package.preload['markdown'] = function()
     local markdown = {}
 
+    --- Hack. Every escaped character is encoded as their ASCII values wrapped in two 1 characters
+    ---@param str string
+    ---@param pattern string
+    ---@param escape_character string?
+    ---@return string
+    local function escape(str, pattern, escape_character)
+        escape_character = escape_character or '\001'
+        return (str:gsub(pattern, function(c) return escape_character .. tostring(string.byte(c)) .. escape_character end))
+    end
+
     ---@type Handler
     local TextHandler
 
@@ -64,14 +74,14 @@ package.preload['markdown'] = function()
         ---@param code string
         ---@return string
         code = function(code)
-            return "<code>" .. code .. "</code>"
+            return "<code class=\"inline-code\">" .. code .. "</code>"
         end,
 
         ---@param type string
         ---@param block string
         ---@return string
         codeBlock = function(type, block)
-            return ("<pre style=\"white-space: pre;\" type=\"%s\">%s</pre>"):format(type, block)
+            return ("<code class=\"block-code\" type=\"%s\">%s</code>"):format(type, block)
         end,
 
         ---@return string start
@@ -118,16 +128,6 @@ package.preload['markdown'] = function()
     markdown.TextHandler = TextHandler
     markdown.DefaultHandler = Handler
 
-    --- Hack. Every escaped character is encoded as their ASCII values wrapped in two 1 characters
-    ---@param str string
-    ---@param pattern string
-    ---@param escape_character string?
-    ---@return string
-    local function escape(str, pattern, escape_character)
-        escape_character = escape_character or '\001'
-        return str:gsub(pattern, function(c) return escape_character .. tostring(string.byte(c)) .. escape_character end)
-    end
-
     ---@class State
     ---@field tag string
 
@@ -169,7 +169,8 @@ package.preload['markdown'] = function()
         input = escape(
             input:
             gsub("```(.-)\n(.-)```",
-                function(type, block) return ("%s"):format(escape(handler('codeBlock')(type, block), "(.)", '\002')) end)
+                function(type, block) return ("%s"):format(escape(
+                    handler('codeBlock')(type, block:gsub("%<", "&lt;"):gsub("%>", "&gt;")), "(.)", '\002')) end)
             :
             gsub("^%s*(.+)%s*$", "%1\n\n"): -- Trim text and append empty line to denote termination
             gsub("\n\n+", "\n\n")           -- Collapse empty newlines to single one
@@ -198,7 +199,8 @@ package.preload['markdown'] = function()
                 return unordered_list_element_start
             end)
             code_matches = line:find("^\002")
-            line = line:gsub("`(.-)`", function(code) return handler('code')(escape(code, "(.)")) end)
+            line = line:gsub("`(.-)`",
+                function(code) return handler('code')(escape(code:gsub("%<", "&lt;"):gsub("%>", "&gt;"), "(.)")) end)
             line = line:gsub("%!(%b[])(%b())",
                 function(label, link) return handler('inlineImage')(label:sub(2, -2), link:sub(2, -2)) end)
             line = line:gsub("(%b[])(%b())",
