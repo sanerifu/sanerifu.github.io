@@ -1,4 +1,4 @@
-@@@authors = Elif Sanem Ceyhan
+@@@title = Sanerifu
 
 Merhaba!
 

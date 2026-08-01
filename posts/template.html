@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 
-<head lang="tr">
+<head>
     <meta charset="utf-8" />
     <title>
         <@ title=> $$ @>
@@ -18,17 +18,17 @@
                     <@ body=> $$ @>
                 </article>
         </div>
-        <div id="foot" class="status-bar section">
-            <p id="tag-field" class="status-bar-field">
+        <@tags|authors|date?=> <div id="foot" class="status-bar section"> @>
+            <@tags?=> <p id="tag-field" class="status-bar-field"> @>
                 <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
-            </p>
-            <p id="author-field" class="status-bar-field">
+            <@tags?=> </p> @>
+            <@authors?=> <p id="author-field" class="status-bar-field"> @>
                 <@ authors?=>Yazan: @> <@ authors=> $$ @, >
-            </p>
-            <p id="date-field" class="status-bar-field">
+            <@authors?=> </p> @>
+            <@date?=> <p id="date-field" class="status-bar-field"> @>
                 <@ date?=> Tarih: @> <@ date=> $$ @, >
-            </p>
-        </div>
+            <@date?=> </p> @>
+        <@tags|authors|date?=> </div> @>
 </body>
 
 </html>
