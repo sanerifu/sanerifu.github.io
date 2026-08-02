@@ -33,7 +33,7 @@
     <if expression="authors">
         <p id="author-field" class="status-bar-field">
     </if>
-    <if expression="authors">Yazan: </if>
+    <if expression="authors">Yazan</if><if expression="authors and authors_count > 1">lar</if><if expression="authors">: </if>
     <replace variable="authors" placeholder="author" delimiter=", ">author</replace>
     <if expression="authors">
         </p>

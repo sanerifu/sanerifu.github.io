@@ -26,7 +26,7 @@ function addEntries(index) {
 
         name.innerHTML = entry.title ? entry.title[0] : "";
         date.innerHTML = `Tarih: ${date_string}`;
-        author.innerHTML = `Yazar${entry.authors && entry.authors.length > 1 ? "lar" : ""}: ${entry.authors ? entry.authors.join(", ") : ""}`;
+        author.innerHTML = `Yazan${entry.authors && entry.authors.length > 1 ? "lar" : ""}: ${entry.authors ? entry.authors.join(", ") : ""}`;
 
         if(entry.tags) {
             tags.innerText = `Etiketler: ${entry.tags.join(", ")}`;

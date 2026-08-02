@@ -336,9 +336,10 @@ input = table.concat(input_array, '\n')
 
 metadata.body = { markdown.compile(input, markdown.DefaultHandler) }
 
-local metadata_boolean = {} ---@type table<string, boolean>
+local metadata_context = {} ---@type table<string, boolean | integer>
 for k in pairs(metadata) do
-    metadata_boolean[k] = #metadata[k] > 0
+    metadata_context[k] = #metadata[k] > 0
+    metadata_context[k .. '_count'] = #metadata[k]
 end
 
 local loader = loadstring or load
@@ -353,7 +354,6 @@ local function eval(expr, env, ...)
         debug.setupvalue(chunk, 1, env)
     end
     local ret = chunk(...)
-    -- io.stderr:write(("%q %q\n"):format(expr, tostring(ret)))
     return ret
 end
 
@@ -372,7 +372,7 @@ local output =
         ---@param expression string
         ---@param body string
         function(expression, body)
-            return (eval(expression, metadata_boolean) and body or ""):gsub("%%", "%%%%")
+            return (eval(expression, metadata_context) and body or ""):gsub("%%", "%%%%")
         end)
     :gsub(
         "%<replace%s+variable%s*%=%s*%\"(.-)%\"%s+placeholder%s*%=%s*%\"(.-)%\"(%s+delimiter%s*%=%s*%\"(.-)%\")%s*%>(.-)%<%/replace%>",
