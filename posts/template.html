@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>
-        <replace variable="page_title" placeholder="%$%$" delimiter="">$$</replace>
+        <replace variable="page_title" placeholder="title" delimiter="">title</replace>
     </title>
     <link rel="stylesheet" href="/posts/post.css" />
 </head>
@@ -12,11 +12,11 @@
 <body>
     <include path="menubar.html" />
     <div id="content" class="section">
-        <replace variable="title" placeholder="%$%$" delimiter="">
-            <header>$$</header>
+        <replace variable="title" placeholder="title" delimiter="">
+            <header>title</header>
         </replace>
         <article>
-            <replace variable="body" placeholder="%$%$" delimiter="">$$</replace>
+            <replace variable="body" placeholder="body" delimiter="">body</replace>
         </article>
     </div>
     <if expression="tags or authors or date">
@@ -26,7 +26,7 @@
         <p id="tag-field" class="status-bar-field">
     </if>
     <if expression="tags"> Etiketler: </if>
-    <replace variable="tags" placeholder="%$%$" delimiter=", ">$$</replace>
+    <replace variable="tags" placeholder="tag" delimiter=", ">tag</replace>
     <if expression="tags">
         </p>
     </if>
@@ -34,7 +34,7 @@
         <p id="author-field" class="status-bar-field">
     </if>
     <if expression="authors">Yazan: </if>
-    <replace variable="authors" placeholder="%$%$" delimiter=", ">$$</replace>
+    <replace variable="authors" placeholder="author" delimiter=", ">author</replace>
     <if expression="authors">
         </p>
     </if>
@@ -42,7 +42,7 @@
         <p id="date-field" class="status-bar-field"></p>
     </if>
     <if expression="date">Tarih: </if>
-    <replace variable="date" placeholder="%$%$" delimiter=", ">$$</replace>
+    <replace variable="date" placeholder="date" delimiter=", ">date</replace>
     <if expression="date">
         </p>
     </if>
