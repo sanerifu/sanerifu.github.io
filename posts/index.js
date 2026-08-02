@@ -20,20 +20,16 @@ function addEntries(index) {
 
         let bottom_row = document.createElement('div')
         let author = document.createElement('span');
-        let tags = document.createElement('ul');
+        let tags = document.createElement('div');
 
         let date_string = entry.date ? entry.date[0]: "";
 
         name.innerHTML = entry.title ? entry.title[0] : "";
-        date.innerHTML = date_string;
-        author.innerHTML = entry.authors ? entry.authors.join(", ") : "";
+        date.innerHTML = `Tarih: ${date_string}`;
+        author.innerHTML = `Yazar${entry.authors && entry.authors.length > 1 ? "lar" : ""}: ${entry.authors ? entry.authors.join(", ") : ""}`;
 
         if(entry.tags) {
-            for(let tag_string of entry.tags) {
-                let tag = document.createElement('li');
-                tag.innerText = tag_string;
-                tags.append(tag);
-            }
+            tags.innerText = `Etiketler: ${entry.tags.join(", ")}`;
         }
 
         name.classList.add("post-name");
