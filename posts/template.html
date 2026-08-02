@@ -4,31 +4,51 @@
 <head>
     <meta charset="utf-8" />
     <title>
-        <@ page-title=> $$ @>
+        <replace variable="page_title" placeholder="%$%$" delimiter="">$$</replace>
     </title>
-    <link rel="stylesheet" href="/posts/post.css"/>
+    <link rel="stylesheet" href="/posts/post.css" />
 </head>
 
 <body>
-    <# menubar.html #>
-        <div id="content" class="section">
-            <@ title=>
-                <header>$$</header> @>
-                <article>
-                    <@ body=> $$ @>
-                </article>
+    <include path="menubar.html" />
+    <div id="content" class="section">
+        <replace variable="title" placeholder="%$%$" delimiter="">
+            <header>$$</header>
+        </replace>
+        <article>
+            <replace variable="body" placeholder="%$%$" delimiter="">$$</replace>
+        </article>
+    </div>
+    <if expression="tags or authors or date">
+        <div id="foot" class="status-bar section">
+    </if>
+    <if expression="tags">
+        <p id="tag-field" class="status-bar-field">
+    </if>
+    <if expression="tags"> Etiketler: </if>
+    <replace variable="tags" placeholder="%$%$" delimiter=", ">$$</replace>
+    <if expression="tags">
+        </p>
+    </if>
+    <if expression="authors">
+        <p id="author-field" class="status-bar-field">
+    </if>
+    <if expression="authors">Yazan: </if>
+    <replace variable="authors" placeholder="%$%$" delimiter=", ">$$</replace>
+    <if expression="authors">
+        </p>
+    </if>
+    <if expression="date">
+        <p id="date-field" class="status-bar-field"></p>
+    </if>
+    <if expression="date">Tarih: </if>
+    <replace variable="date" placeholder="%$%$" delimiter=", ">$$</replace>
+    <if expression="date">
+        </p>
+    </if>
+    <if expression="tags or authors or date">
         </div>
-        <@tags|authors|date?=> <div id="foot" class="status-bar section"> @>
-            <@tags?=> <p id="tag-field" class="status-bar-field"> @>
-                <@ tags?=> Etiketler: @> <@ tags=> $$ @, >
-            <@tags?=> </p> @>
-            <@authors?=> <p id="author-field" class="status-bar-field"> @>
-                <@ authors?=>Yazan: @> <@ authors=> $$ @, >
-            <@authors?=> </p> @>
-            <@date?=> <p id="date-field" class="status-bar-field"> @>
-                <@ date?=> Tarih: @> <@ date=> $$ @, >
-            <@date?=> </p> @>
-        <@tags|authors|date?=> </div> @>
+    </if>
 </body>
 
 </html>

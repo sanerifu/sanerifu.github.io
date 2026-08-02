@@ -6,7 +6,7 @@
     <title>
         dynamic_cast hk.
     </title>
-    <link rel="stylesheet" href="/posts/post.css"/>
+    <link rel="stylesheet" href="/posts/post.css" />
 </head>
 
 <body>
@@ -16,10 +16,12 @@
     <a href="/about">Hakkımda</a>
 </nav>
 
-        <div id="content" class="section">
+    <div id="content" class="section">
+        
             <header>dynamic_cast hk.</header>
-                <article>
-                    <p>
+        
+        <article>
+            <p>
 Yeterince C++ kullanmış herkes muhtemelen <code class="inline-code">dynamic_cast</code> gibi özellikleri görmüştür. Genel olarak öğretilen işlevi, bir sınıfı kendisinin alt sınıfına döndürmek.
 </p>
 
@@ -55,19 +57,38 @@ Sorunların ilki, bu vtable'ın <code class="inline-code">dynamic_cast</code> il
 Ne yazık ki C++'ın bu durum için güzel bir çözümü yok. Eğer gerçekten bir sınıfın belli niteliklerine sadece varlarsa erişmek gibi bir ihtiyacımız varsa, öncelikle birkaç kere  daha bu ihtiyaç üzerine düşünmek gerekir, gerçekten buna ihtiyaç var mı yoksa kodu lağım çukuru gibi yazdığımız için mi gerekiyor diye. Eğer her şekilde cevabımız ilki ise, bu gereksinimi koda dökmek en doğrusu olur. Ama vtable mantığında bu pek kolay değil, dolayısıyla C++'ta yapmak hiç de basit değil. C gibi bir dil kullanıyorsak zaten çokbiçimliliği kendimiz yazdığımız için vtable mantığından en başta uzak durmak daha doğru olacaktır. Bunun yerine şişaretçi (şişman işaretçi, <em>fat pointer</em>) kullanmak daha kolay kılacaktır hayatımızı. Basitçe; çokbiçimli bir cismi, o cismi gösteren işaretçinin yanında vtable'ın kendisini yollama yöntemi oluyor bu. Vtable'ı verinin yanından çıkarmış oluyoruz bir bakıma. Eğer opsiyonel bir arayüz istiyorsak, bunu fonksiyonun imzasında belirtmek gerekir, eğer boş bir değer verilirse (örn. <code class="inline-code">nullptr</code>), ona göre davranabiliriz. Diğer bazı popüler dillerde de (Rust, Go) buna tam karşılık gelen bir mantık bulamadım. Genel olarak karşılaşılmaması gereken bir problem aslında, ama karşılaşılırsa düzgün çözümü bu. Elbette eğer mümkünse açık çokbiçimliliği (<em>open polymorphism</em>) kapalı çokbiçimliliğe (<em>closed polymorphism</em>) çevirmek en mantıklısı. Arayüz kavramı yerine toplam tipleri (<em>sum type</em>) kullanarak bütün ihtimalleri belirtmek daha doğru olacaktır.
 </p>
 
-                </article>
-        </div>
+        </article>
+    </div>
+    
         <div id="foot" class="status-bar section">
-            <p id="tag-field" class="status-bar-field">
-                Etiketler: yazılım, nesne yönelimli programlama, yazılım mimarisi
-            </p>
-            <p id="author-field" class="status-bar-field">
-                Yazan: Elif Sanem Ceyhan
-            </p>
-            <p id="date-field" class="status-bar-field">
-                Tarih: 2026-06-14 20:54:31 +0300 Paz
-            </p>
+    
+    
+        <p id="tag-field" class="status-bar-field">
+    
+     Etiketler: 
+    yazılım, nesne yönelimli programlama, yazılım mimarisi
+    
+        </p>
+    
+    
+        <p id="author-field" class="status-bar-field">
+    
+    Yazan: 
+    Elif Sanem Ceyhan
+    
+        </p>
+    
+    
+        <p id="date-field" class="status-bar-field"></p>
+    
+    Tarih: 
+    2026-06-14 20:54:31 +0300 Paz
+    
+        </p>
+    
+    
         </div>
+    
 </body>
 
 </html>

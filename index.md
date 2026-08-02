@@ -1,4 +1,4 @@
-@@@page-title = Sanerifu
+@@@page_title = Sanerifu
 
 Merhaba!
 

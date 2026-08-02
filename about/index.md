@@ -1,4 +1,4 @@
-@@@page-title = Hakkımda
+@@@page_title = Hakkımda
 
 Ben Elif Sanem (kısaca Elif). Yarışmaya Ankara'dan katılıyorum. 2002 doğumluyum (her doğum günümde bu sayfayı güncellemek istemiyorum).
 

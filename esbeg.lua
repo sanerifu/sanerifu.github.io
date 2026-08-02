@@ -169,8 +169,10 @@ package.preload['markdown'] = function()
         input = escape(
             input:
             gsub("```(.-)\n(.-)```",
-                function(type, block) return ("%s"):format(escape(
-                    handler('codeBlock')(type, block:gsub("%<", "&lt;"):gsub("%>", "&gt;")), "(.)", '\002')) end)
+                function(type, block)
+                    return ("%s"):format(escape(
+                        handler('codeBlock')(type, block:gsub("%<", "&lt;"):gsub("%>", "&gt;")), "(.)", '\002'))
+                end)
             :
             gsub("^%s*(.+)%s*$", "%1\n\n"): -- Trim text and append empty line to denote termination
             gsub("\n\n+", "\n\n")           -- Collapse empty newlines to single one
@@ -323,7 +325,7 @@ for line in input:gmatch("(.-)\n") do
         metadata[key] = val
     elseif not metadata.title and title then
         metadata.title = { trim(title) }
-        metadata["page-title"] = { trim(title) }
+        metadata.page_title = { trim(title) }
     elseif title then
     else
         table.insert(input_array, (line:gsub("^%#(%#+)", "%1")))
@@ -334,9 +336,30 @@ input = table.concat(input_array, '\n')
 
 metadata.body = { markdown.compile(input, markdown.DefaultHandler) }
 
+local metadata_boolean = {} ---@type table<string, boolean>
+for k in pairs(metadata) do
+    metadata_boolean[k] = #metadata[k] > 0
+end
+
+local loader = loadstring or load
+---@param expr string
+---@param env table
+---@param ... any
+local function eval(expr, env, ...)
+    local chunk = assert(loader("return " .. expr, "=eval"))
+    if setfenv then
+        setfenv(chunk, env)
+    else
+        debug.setupvalue(chunk, 1, env)
+    end
+    local ret = chunk(...)
+    -- io.stderr:write(("%q %q\n"):format(expr, tostring(ret)))
+    return ret
+end
+
 local output =
     template
-    :gsub("%<%#(.-)%#%>",
+    :gsub("%<include%s+path%s*%=%s*%\"(.-)%\"%s*%/?%>",
         ---@param path string
         ---@return string
         function(path)
@@ -345,32 +368,32 @@ local output =
             file:close()
             return data:gsub("%%", "%%%%")
         end)
-    :gsub("%<%@%s*(.-)%s*%=%>%s*(.-)%s*%@(.-)%>",
-        ---@param varname string
+    :gsub("%<if%s+expression%s*%=%s*%\"(.-)%\"%s*%>(.-)%<%/if%>",
         ---@param expression string
+        ---@param body string
+        function(expression, body)
+            return (eval(expression, metadata_boolean) and body or ""):gsub("%%", "%%%%")
+        end)
+    :gsub(
+        "%<replace%s+variable%s*%=%s*%\"(.-)%\"%s+placeholder%s*%=%s*%\"(.-)%\"(%s+delimiter%s*%=%s*%\"(.-)%\")%s*%>(.-)%<%/replace%>",
+        ---@param variable string
+        ---@param placeholder string
         ---@param delimiter string
-        ---@return string
-        function(varname, expression, delimiter)
-            if varname:sub(-1, -1) == '?' then
-                varname = varname:sub(1, -2)
-                local included = false
-                for var in varname:gmatch("(%a+)%s*%|?") do
-                    included = included or (metadata[var] and #metadata[var] > 0 or false)
-                end
-                return included and expression:gsub("%%", "%%%%") or ""
-            end
-            local var = metadata[varname]
-            if var then
-                local ret = {}
-                for i = 1, #var do
-                    local escaped = var[i]:gsub("%%", "%%%%")
-                    local replaced = expression:gsub("%$%$", escaped)
-                    table.insert(ret, replaced)
-                end
-                return table.concat(ret, delimiter)
-            else
+        ---@param body string
+        function(variable, placeholder, _, delimiter, body)
+            local value = metadata[variable]
+            if not value then
                 return ""
             end
+
+            local ret = {}
+            for i = 1, #value do
+                local escaped = value[i]:gsub("%%", "%%%%")
+                local replaced = body:gsub(placeholder, escaped)
+                table.insert(ret, replaced)
+            end
+            ret = table.concat(ret, (delimiter:gsub("%%", "%%%%")))
+            return ret
         end)
 do
     local output_file = assert(io.open(args[2], "w"))
