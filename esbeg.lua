@@ -291,7 +291,7 @@ do
     template_file:close()
 end
 
-local metadata = { path = args[2] }
+local metadata = { path = args[2]:match("(.+)%/index.html") }
 
 ---@param s string
 ---@return string
