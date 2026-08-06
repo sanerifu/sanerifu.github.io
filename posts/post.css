@@ -68,10 +68,17 @@ nav {
     justify-content: center;
 }
 
-nav a,
+nav a, nav a img,
 #page-header a {
     padding: calc(1vh + 4px) calc(2vw + 4px);
     margin: 0.25vh 0.5vw;
+}
+
+nav a img {
+    height: 1.5em;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 nav a:hover,

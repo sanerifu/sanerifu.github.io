@@ -123,6 +123,8 @@ package.preload['markdown'] = function()
         codeBlock = function(type, block) return block end,
         orderedList = function() return "", "" end,
         orderedListElement = function() return "", "" end,
+        unorderedList = function() return "", "" end,
+        unorderedListElement = function() return "", "" end,
     }, Handler)
 
     markdown.TextHandler = TextHandler
@@ -278,6 +280,7 @@ local args = { ... }
 
 local input
 local template
+local rss_file = args[4]
 
 do
     local input_file = assert(io.open(args[1], "r"))
@@ -335,6 +338,7 @@ end
 input = table.concat(input_array, '\n')
 
 metadata.body = { markdown.compile(input, markdown.DefaultHandler) }
+metadata.plaintext = { markdown.compile(input, markdown.TextHandler) }
 
 local metadata_context = {} ---@type table<string, boolean | integer>
 for k in pairs(metadata) do
@@ -401,7 +405,7 @@ do
     output_file:close()
 end
 
-local EXCLUDED_FIELDS = { ['body'] = true }
+local EXCLUDED_FIELDS = { ['body'] = true, ['plaintext'] = true }
 
 local function jsonify(value)
     if type(value) == 'table' then
@@ -430,3 +434,94 @@ local function jsonify(value)
 end
 
 io.write(jsonify(metadata))
+
+local weekday_mapping = {
+    ["Pzt"] = "Mon",
+    ["Sal"] = "Tue",
+    ["Çrş"] = "Wed",
+    ["Prş"] = "Thu",
+    ["Cum"] = "Fri",
+    ["Cmt"] = "Sat",
+    ["Paz"] = "Sun",
+}
+
+local month_mapping = {
+    ["01"] = "Jan",
+    ["02"] = "Feb",
+    ["03"] = "Mar",
+    ["04"] = "Apr",
+    ["05"] = "May",
+    ["06"] = "Jun",
+    ["07"] = "Jul",
+    ["08"] = "Aug",
+    ["09"] = "Sep",
+    ["10"] = "Oct",
+    ["11"] = "Nov",
+    ["12"] = "Dec",
+}
+
+---@param extendedIso string?
+---@return string?
+local function makeRfc2822(extendedIso)
+    if not extendedIso then
+        return nil
+    end
+    local year, month, day, hour, minute, second, timezone, weekday = extendedIso:match(
+        "^(....)%-(..)%-(..) (..):(..):(..) (.....) (.+)$"
+    )
+
+    return ("%s, %d %s %d %s:%s:%s %s"):format(
+        weekday_mapping[weekday],
+        tonumber(day),
+        month_mapping[month],
+        tonumber(year),
+        hour,
+        minute,
+        second,
+        timezone
+    )
+end
+
+---@param tag string
+---@param text string?
+---@return string
+local function wrapInTags(tag, text)
+    if text then
+        return ("<%s>%s</%s>"):format(tag, text, tag)
+    else
+        return ""
+    end
+end
+
+---@param text string
+---@param start integer
+---@param finish integer
+---@return string
+local function utf8Slice(text, start, finish)
+    local t = {}
+    local i = 1
+    for c in text:gmatch("[\1-\127\194-\244][\128-\191]*") do
+        if start <= i and i <= finish then
+            table.insert(t, c)
+        end
+        i = i + 1
+    end
+    return table.concat(t, "")
+end
+
+do
+    local rss = assert(io.open(rss_file, "w"))
+    rss:write((
+        "    <item>\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "    </item>"
+    ):format(
+        wrapInTags("title", metadata.title and metadata.title[1] or nil),
+        wrapInTags("description", metadata.plaintext[1] and (utf8Slice(metadata.plaintext[1], 1, 120) .. "...") or nil),
+        wrapInTags("link", metadata.path and ("https://sanerifu.github.io/" .. metadata.path) or nil),
+        wrapInTags("pubDate", makeRfc2822(metadata.date and metadata.date[1] or nil))
+    ))
+end

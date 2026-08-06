@@ -1,0 +1,38 @@
+<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+<rss version=\"2.0\">
+<channel>
+    <title>Sanerifu</title>
+    <description>Elif Sanem\'in Ağ Sayfası</description>
+    <link>https://sanerifu.github.io</link>
+    <ttl>1800</ttl>
+
+    <item>
+        <title>Genel Ağ</title>
+        <description>
+Genel ağ, veya daha yaygın ismiyle internet, hayatımızın belki en büyük parçası. Geçmiş onyıllar içerisinde hızlı bir ş...</description>
+        <link>https://sanerifu.github.io/posts/2026-04-19_internet</link>
+        <pubDate>Sun, 19 Apr 2026 23:05:33 +0300</pubDate>
+    </item>
+    <item>
+        <title>İnsan Çalışmak İster</title>
+        <description>
+Çalışma konusu her açıldığında sürekli bahsedilen bir argüman vardır, değil mi? "Yatmak varken insan neden çalışsın ki?...</description>
+        <link>https://sanerifu.github.io/posts/2026-04-20_insan</link>
+        <pubDate>Mon, 20 Apr 2026 21:57:55 +0300</pubDate>
+    </item>
+    <item>
+        <title>Sade Kod</title>
+        <description>
+Factory, interface, ABC, kalıtım, encapsulation... Nesne yönelimli programlama yazılımcıların hayatına çok sayıda terim...</description>
+        <link>https://sanerifu.github.io/posts/2026-04-23_sade</link>
+        <pubDate>Thu, 23 Apr 2026 18:52:32 +0300</pubDate>
+    </item>
+    <item>
+        <title>dynamic_cast hk.</title>
+        <description>
+Yeterince C++ kullanmış herkes muhtemelen dynamic_cast gibi özellikleri görmüştür. Genel olarak öğretilen işlevi, bir s...</description>
+        <link>https://sanerifu.github.io/posts/2026-06-14_dyncast</link>
+        <pubDate>Sun, 14 Jun 2026 20:54:31 +0300</pubDate>
+    </item>
+</channel>
+</rss>
