@@ -18,7 +18,7 @@ $(template): menubar.html
 $(index_name): $(indices) 
 	@echo MERGING
 	@echo "local args = {...} for i=1,#args do local file = io.open(args[i], 'r') args[i] = file:read('*a'):gsub('[' .. string.char(10, 13) .. ']', '') file:close() end io.write('const __INDEX__ = [' .. table.concat(args, ',') .. ']')" | $(lua) - $^ > $@
-	@echo "local args = {...} for i=1,#args do local file = io.open(args[i], 'r') args[i] = file:read('*a'):gsub('[' .. string.char(10, 13) .. ']', '\\\n') file:close() end io.write([[<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<rss version=\"2.0\">\n<channel>\n    <title>Sanerifu</title>\n    <description>Elif Sanem\'in Ağ Sayfası</description>\n    <link>https://sanerifu.github.io</link>\n    <ttl>1800</ttl>\n\n]] .. table.concat(args, \"\\\n\") .. [[\n\n</channel>\n</rss>\n]])" | $(lua) - $(feeds) > rss.xml
+	@echo "local args = {...} for i=1,#args do local file = io.open(args[i], 'r') args[i] = file:read('*a'):gsub('[' .. string.char(10, 13) .. ']', '@NEWLINE@') file:close() end io.write((([[<?xml version=\"1.0\" encoding=\"UTF-8\" ?>@NEWLINE@<rss version=\"2.0\">@NEWLINE@<channel>@NEWLINE@    <title>Sanerifu</title>@NEWLINE@    <description>Elif Sanem'in A]] .. string.char(0xC4, 0x9F) .. [[ Sayfas]] .. string.char(0xC4, 0xB1) .. [[</description>@NEWLINE@    <link>https://sanerifu.github.io</link>@NEWLINE@    <ttl>1800</ttl>@NEWLINE@@NEWLINE@]] .. table.concat(args, [[@NEWLINE@]]) .. [[@NEWLINE@@NEWLINE@</channel>@NEWLINE@</rss>@NEWLINE@]]):gsub(\"@NEWLINE@\", string.char(10))))" | $(lua) - $(feeds) > rss.xml
 
 %.json: %.md $(template) $(converter)
 	@echo COMPILING $<

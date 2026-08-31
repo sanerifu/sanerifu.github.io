@@ -2,7 +2,7 @@
 <rss version="2.0">
 <channel>
     <title>Sanerifu</title>
-    <description>Elif Sanem\'in Ağ Sayfası</description>
+    <description>Elif Sanem'in Ağ Sayfası</description>
     <link>https://sanerifu.github.io</link>
     <ttl>1800</ttl>
 
@@ -34,5 +34,13 @@ Yeterince C++ kullanmış herkes muhtemelen dynamic_cast gibi özellikleri görm
         <link>https://sanerifu.github.io/posts/2026-06-14_dyncast</link>
         <pubDate>Sun, 14 Jun 2026 20:54:31 +0300</pubDate>
     </item>
+    <item>
+        <title>Tanrılar, Medeniyetler ve Bilinçler</title>
+        <description>
+Elif 6. sınıfta. Hayatının, birçok anlamda, dönüm noktalarından birisi. Kendini daha önce hiç olmadığı şekillerde keşfe...</description>
+        <link>https://sanerifu.github.io/posts/2026-08-31_bilinc</link>
+        <pubDate>Mon, 31 Aug 2026 23:59:02 +0300</pubDate>
+    </item>
+
 </channel>
 </rss>
