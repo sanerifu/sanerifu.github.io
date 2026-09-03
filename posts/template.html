@@ -20,36 +20,33 @@
             <replace variable="body" placeholder="body" delimiter="">body</replace>
         </article>
     </div>
-    <if expression="tags or authors or date">
-        <div id="foot" class="status-bar section">
-    </if>
-    <if expression="tags">
-        <p id="tag-field" class="status-bar-field">
-    </if>
-    <if expression="tags"> Etiketler: </if>
-    <replace variable="tags" placeholder="tag" delimiter=", ">tag</replace>
-    <if expression="tags">
-        </p>
-    </if>
-    <if expression="authors">
-        <p id="author-field" class="status-bar-field">
-    </if>
-    <if expression="authors">Yazan</if><if expression="authors and authors_count > 1">lar</if><if expression="authors">: </if>
-    <replace variable="authors" placeholder="author" delimiter=", ">author</replace>
-    <if expression="authors">
-        </p>
-    </if>
-    <if expression="date">
-        <p id="date-field" class="status-bar-field"></p>
-    </if>
-    <if expression="date">Tarih: </if>
-    <replace variable="date" placeholder="date" delimiter=", ">date</replace>
-    <if expression="date">
-        </p>
-    </if>
-    <if expression="tags or authors or date">
-        </div>
-    </if>
+    <div id="foot" class="status-bar section">
+        <if expression="tags">
+            <p id="tag-field" class="status-bar-field">
+        </if>
+        <if expression="tags"> Etiketler: </if>
+        <replace variable="tags" placeholder="tag" delimiter=", ">tag</replace>
+        <if expression="tags">
+            </p>
+        </if>
+        <if expression="authors">
+            <p id="author-field" class="status-bar-field">
+        </if>
+        <if expression="authors">Yazan</if><if expression="authors and authors_count > 1">lar</if><if expression="authors">: </if>
+        <replace variable="authors" placeholder="author" delimiter=", ">author</replace>
+        <if expression="authors">
+            </p>
+        </if>
+        <if expression="date">
+            <p id="date-field" class="status-bar-field"></p>
+        </if>
+        <if expression="date">Tarih: </if>
+        <replace variable="date" placeholder="date" delimiter=", ">date</replace>
+        <if expression="date">
+            </p>
+        </if>
+        <a id="rss" href="/rss.xml" target="_blank" rel="noopener noreferrer"><p>RSS akışıma abone ol</p></a>
+    </div>
 </body>
 
 </html>
