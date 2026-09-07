@@ -12,7 +12,7 @@ Bağımlılık zerki görece öğretilen bir yöntem. Nesne yönelimli programla
 
 Bu kavramlar aslında yazılımların hemen her yerine girer. Hatta bence sadece yazılım değil hemen her mühendislikte benzeri kavramlar olsa gerek. Kısacası; eğer bir bağımlılık; belge içerisinde belirtilmişse bu bariz yani açık, belirtilmemişse ve varsayılmışsa bu muma yani kapalı bir bağımlılık olur. Yazılımda genel olarak muma bağımlılıklarla fazlaca karşılaştığımız için bundan bahsetmek istiyorum. Bir kodun başka bir koda bağlaşıklık seviyesi hiç bağlaşık olmamalarından (_uncoupled_) sıkı bağlaşık olmalarına (_tightly coupled_) uzanan bir spektrum. İdeali bağlaşıksız kodlardır, birindeki değişiklikler ötekini etkilemiyorsa ne âlâ! Ama aynı yazılım içerisindeki farklı kodlar hemen her zaman sıfır olmayan bir bağlaşıklık oranına sahiptir. İşte bağımlılık eğitimi burada devreye giriyor. Bir bağımlılık bariz de olabilir muma da. En basit bir örneği verelim:
 
-````cpp
+```cpp
 int x = 0;
 
 void foo(int a) {
@@ -30,4 +30,8 @@ void foo(int* x, int a) {
 }
 ```
 
-Evet, artık `x` bağımlılığımız bariz hâle gelmiş durumda. `foo`nun bir hâle bağlı olduğunu fonksiyonun imzası (_function signature_) bariz şekilde gösteriyor.
+Evet, artık `x` bağımlılığımız bariz hâle gelmiş durumda. `foo`nun bir hâle bağlı olduğunu fonksiyonun imzası (_function signature_) bariz şekilde gösteriyor. Ancak bu tarz değişiklikler zaten genel olarak tavsiye edilir. Küresel (_global_) değişkenleri tavsiye eden kimse görmedim ben şimdiye dek.
+
+Çoğunlukla bağımlılıklarla ilgili sorunlar daha farklı şekillerde tezahür ediyor. Benim en sık gördüğüm sorun sanırım metotların sınıflara bağlı olması. "Bağlı olmayacak da ne olacak?" diyebilirsiniz; sorun bu metodun, sınıfın ufak bir parçasını kullanmasında oluşuyor. Tek bir veri parçasını kullanan metot on farklı veriye bağlı gözüküyor. Her metot bu şekilde olduğu için de neyin tam olarak neye bağlı olduğunu doğrudan göremiyoruz.
+
+Peki bağımlılığımızı nasıl eğitiriz? İlk aşama bunu çözmek. Sınıflar doğaları gereği birden fazla işi yapma eğilimine sahip. Evet SOLID'in S'si yani tek sorumluluk ilkesi (_single responsibility principle_) bu şekildeki sınıfların yanlış olduğunu söylüyor. Ama veri ile davranışı birleştirdiğimiz an yani nesne yönelimli programlamaya girdiğimizde bu ilkeyi anlamlı şekilde uygulamak pek mümkün olmuyor. Zaten doğası gereği her sınıf en az iki sorumluluğa sahip: veriyi tutmak ve o veriyi işleyen en az bir yordama sahip olmak. Öteki türlü ya serbest işlevler (_free function_) ya da düz veriler olarak tekrar yazılabilirler. Yani nesne yönelimli programlama kendisinin ilk genelgeçer kuralı ile böyle bir çelişkiye sahip. Dolayısıyla ilk aşama bu yöntemleri bırakmak oluyor. Sınıflar yerine işlevler ve veriler şeklinde düşünmek gerekiyor. Bu sayede artık her fonksiyonumuz için bağımlılıkları bariz şekilde belirtmenin yolunu açmış oluyoruz.
