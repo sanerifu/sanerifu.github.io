@@ -36,8 +36,49 @@ Evet, artık `x` bağımlılığımız bariz hâle gelmiş durumda. `foo`nun bir
 
 Peki bağımlılığımızı nasıl eğitiriz? İlk aşama bunu çözmek. Sınıflar doğaları gereği birden fazla işi yapma eğilimine sahip. Evet SOLID'in S'si yani tek sorumluluk ilkesi (_single responsibility principle_) bu şekildeki sınıfların yanlış olduğunu söylüyor. Ama veri ile davranışı birleştirdiğimiz an yani nesne yönelimli programlamaya girdiğimizde bu ilkeyi anlamlı şekilde uygulamak pek mümkün olmuyor. Zaten doğası gereği her sınıf en az iki sorumluluğa sahip: veriyi tutmak ve o veriyi işleyen en az bir yordama sahip olmak. Öteki türlü ya serbest işlevler (_free function_) ya da düz veriler olarak tekrar yazılabilirler. Yani nesne yönelimli programlama kendisinin ilk genelgeçer kuralı ile böyle bir çelişkiye sahip. Dolayısıyla ilk aşama bu yöntemleri bırakmak oluyor. Sınıflar yerine işlevler ve veriler şeklinde düşünmek gerekiyor. Bu sayede artık her fonksiyonumuz için bağımlılıkları bariz şekilde belirtmenin yolunu açmış oluyoruz. Farklı işleri yapan işlevleri ortak bir sınıfla bağdaştırmak zorunda kalmadığımız için istediğimiz gibi bağımlılıkları bölebiliyoruz.
 
-Bu noktadan sonra işlevlerin girdilerini ayarlama kısmı biraz damak tadına bağlı aslında. Ama farklı işlevlerde aynı şekilde gruplanmış girdi almak, kesinlikle her zaman olmasa da, biraz şüphe uyandırmalı bence. Neredeyse hiçbir iki algoritma, eğer çözdükleri problem aynı değilse, aynı girdiler almaz. Bazı insanlar girdi sayısının çokluğunu gruplandırarak çözüyor, gruplandırma yöntemi kullanılacaksa bahsettiğim durum göz önünde buludurulabilir. C veya C++'taki designated initializer özelliği gruplandırma yöntemini güzel kullanılabilir kılabiliyor. Esas sorun aslında girdilerin isminin çağırırken verilmemesi. Kaydırma yapmak fazlasıyla kolay hâle geldiği için yanlış kullanıma müsait olabiliyor bu işlevler her ne kadar bağımlılıklarını bariz şekilde gösteriyor olsalar da. Eğer kullandığınız dil girdileri isimle vermeye (_named arguments_) izin veriyorsa gruplandırmayı çok tavsiye etmiyorum. Girdilerin kendilerine geleceksek, ben belli başlı _temel_ türler dışına çıkılmaması taraftarıyım. Sayılar, metinler, diziler, eşlemeler (_map_) ve işlev işaretçileri (_function pointer_) ve bunlara referans/işaretçiler çoğu durumda yeterli olmalı ama durumunuza göre ekleme veya çıkarma yapabilirsiniz. Yine de çok elleşmemek lazım bence; bunlar çoğu dilde gerçekten temel tür olarak bulunuyor, C'de mesela metin yerine karakter dizisi kullanıyoruz, çünkü hemen her program bunların üst üste eklenmesiyle oluşuyor.
+Bu noktadan sonra işlevlerin girdilerini ayarlama kısmı biraz damak tadına bağlı aslında. Ama farklı işlevlerde aynı şekilde gruplanmış girdi almak, kesinlikle her zaman olmasa da, biraz şüphe uyandırmalı bence. Neredeyse hiçbir iki algoritma, eğer çözdükleri problem aynı değilse, aynı girdiler almaz. Bazı insanlar girdi sayısının çokluğunu gruplandırarak çözüyor, gruplandırma yöntemi kullanılacaksa bahsettiğim durum göz önünde buludurulabilir. C veya C++'taki designated initializer özelliği gruplandırma yöntemini güzel kullanılabilir kılabiliyor. Esas sorun aslında girdilerin isminin çağırırken verilmemesi. Kaydırma yapmak fazlasıyla kolay hâle geldiği için yanlış kullanıma müsait olabiliyor bu işlevler her ne kadar bağımlılıklarını bariz şekilde gösteriyor olsalar da. Eğer kullandığınız dil girdileri isimle vermeye (_named arguments_) izin veriyorsa gruplandırmayı çok tavsiye etmiyorum. Girdilerin kendilerine geleceksek, ben belli başlı _temel_ türler dışına çıkılmaması taraftarıyım. Sayılar, metinler, diziler, eşlemeler (_map_) ve işlev işaretçileri (_function pointer_) ve bunlara referans/işaretçiler çoğu durumda yeterli olmalı ama durumunuza göre ekleme veya çıkarma yapabilirsiniz. Yine de çok elleşmemek lazım bence; bunlar çoğu dilde gerçekten temel tür olarak bulunuyor, aksi örnek olarak C'de metin yerine karakter dizisi kullanılması olabilir ama mantık aynı orada da aslında, çünkü hemen her program bunların üst üste eklenmesiyle oluşuyor.
 
-TODO: Örnek.
+```cpp
+struct ResourceData {
+    void bindTexture(size_t index, int bind_point) const { /* bind code */ }
+    void bindBuffer(size_t index) const { /* bind code */ }
+private:
+    std::vector<Texture> textures;
+    std::vector<Buffer> buffers;
+};
+```
+
+Yukarıdaki örneğe bakalım mesela. Kodun çoğunu yazmadım ama temel mantık belli: `ResourceData` hem dokuları hem de veri belleklerini tutuyor ve bunlar üzerinde işlem yapıyor. En basidinden iki işlemi yazdım yukarıda. Burada dikkat ederseniz `bindTexture` veri bellekleriyle tamamen ilişkisiz olsa da dolaylı yoldan (doku bağlama kodunun veri belleği kullanması düşük ihtimal), `this` işaretçisi üzerinden, aslında veri belleklerine de bağlı oluyor. Bunu daha iyi görmenin yolu bence bu metotları düz işlev olarak yazmak:
+
+```cpp
+struct ResourceData {
+    std::vector<Texture> textures;
+    std::vector<Buffer> buffers;
+};
+void bindTexture(ResourceData const& res, size_t index, int bind_point) { /* bind code */ }
+void bindBuffer(ResourceData const& res, size_t index) { /* bind code */ }
+```
+
+İlk bakışta `bindTexture`'ün aslında veri belleklerini kullanmadığını göremiyoruz bu örnekte mesela. Kodun içerisine bakmadan bu bilgiye erişmemiz mümkün değil. Benim içeri yazdığım yer tutucu yorumun içerisinde kullandığını da kullanmadığını da göremiyoruz. Zaten bir fonksiyonu kullanacaksanız muhtemelen bakış açınız bu şekilde olacaktır: sadece girdileri ve çıktılarını göreceksiniz. Burada teknik olarak çok bir sorun yok aslında. Sadece gereksiz bir girdi alıyor işlevler. Sorun, bu girdiler değiştirilebilir olduğunda asıl oluyor.
+
+```cpp
+struct ResourceData {
+    std::vector<Texture> textures;
+    std::vector<Buffer> buffers;
+    std::vector<Framebuffer> framebuffers;
+};
+void createFramebuffer(ResourceData& res, size_t index) { /* create framebuffer from Framebuffer object at index */ }
+void createTexture(ReourceData& res, size_t index) { /* create texture from Texture object at index */ }
+```
+
+Grafik arayüzlerini bilmeyenler için: framebuffer yani okunabilir ve yazılabilir doku kümeleri renk ve derinlik dokularının bir tür birleşimi gibi bir şey. Mesela 1920x1080 boyuta sahip; kırmızı, yeşil mavi renklere sekizer bit ayıran ve derinliği de 32 bit olarak ayarlayan bir küme oluşturmak için iki tane doku oluşturmamız ve bunları bir kümeye bağlamamız gerekiyor. Buradaki sorun fark ettiniz mi? Küme oluşturmasına rağmen dokuları da değiştiriyor bu işlev. Ancak bu bilgiyi işlevin girdilerinde tam göremiyoruz. `createFramebuffer` ve `createTexture` aynı girdileri alıyor ama bu girdilerin içerisinde farklı parçaları kullanıyor. Fonksiyonun imzası fazla geniş olduğu için fonksiyonun tam ne yaptığını bilmiyoruz, o nedenle işlevin her şeyi değiştirmiş olabileceği varsayımıyla hareket etmemiz gerekebiliyor. Gelin bu bağımlılığı bariz yapalım:
+
+```cpp
+void createFramebuffer(std::vector<Texture>& textures, std::vector<Framebuffer>& framebuffers, size_t index) {}
+void createTexture(std::vector<Texture>& textures, size_t index) {}
+```
+
+Ve evet; böylece doku kümesi oluşturmak için hem doku hem küme dizilerine erişim gerektiği, doku oluşturmak için ise sadece doku dizisine erişim gerektiği bilgisini sadece ve sadece işlev girdilerine bakarak anlayabiliyoruz.
+
 
 TODO: Zamansal ve izleksel bağımlılıklar.
