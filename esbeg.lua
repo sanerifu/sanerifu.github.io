@@ -145,7 +145,7 @@ package.preload['markdown'] = function()
         ---@param type string
         local function handler(type)
             return function(...)
-                return handlers[type](...):gsub("%%", "%%%%%")
+                return handlers[type](...):gsub("%%", "%%%%")
             end
         end
 

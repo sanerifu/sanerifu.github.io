@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Bağımlılığını Nasıl Eğitirsin
+    </title>
+    <link rel="stylesheet" href="/posts/post.css" />
+    <link rel="alternate" type="application/rss+xml" title="Güncellemelerime Abone Olun" href="/rss.xml" />
+</head>
+
+<body>
+    <div id="page-header" class="section"><a href="/">Sanerifu</a></div>
+<nav class="section">
+    <a href="/posts">Gönderiler</a>
+    <a href="/about">Hakkımda</a>
+</nav>
+
+    <div id="content" class="section">
+        
+            <header>Bağımlılığını Nasıl Eğitirsin</header>
+        
+        <article>
+            <p>
+<b>Hiç vakit kaybetmeden not düşeyim, bu gönderi insanların bağımlılıkları ile ilgili değil. Ne alkol bağımlılığına bir çözüm bu ne de eski sevgiliye bağımlılığa. Yazılımdaki bağımlılıklardan bahsediyorum, <em>dependency</em> terimin karşılığı olarak kullandım.</b>
+</p>
+
+<p>
+Evet, kamu spotunu geçtiğimize göre gönderiye girebiliriz. Öncelikle, bağımlılık yani <em>dependency</em> nedir? Bir yazılım bileşeninin derlenmek veya çalışmak için ihtiyaç duyduğu başka bir yazılım parçası diyebiliriz galiba. En genelgeçer kullanımı "üçüncü taraf bağımlılık" yani <em>third party dependency</em> olsa gerek. Hemen her yazılım, dilin kendi standart kütüphanesi dışında bir kütüphaneye bağlı olur genel olarak. JavaScript ve TypeScript ekosisteminde NPM ile; Rust ekosisteminde Cargo ile; Python ekosisteminde Pip veya uv ile; C ve C++ ekosistemlerinde CMake, Conan, ve XMake gibi sistemlerle veya Linux dağıtımlarında doğrudan işletim sisteminin repo sistemi ile yönetilir üçüncü parti bağımlılıklar. Elbette birçoğunda elle de yapılabilir ama makinenin bu kadar rahat yaptığı bir işi insan niye yapsın? Yazılımcılar olarak amacımız otomatize etmek değil mi? Niye kendimize eziyet ettirelim?
+</p>
+
+<p>
+Fakat ben burada başka bir anlamından bahsetmek istiyorum. Nesne yönelimli programlamada kullanılan bir prensip var: bağımlılık zerki (<em>dependency injection</em>). Kısacası, bir sınıf bir şeyleri kendi yaratmak yerine belli bir arayüz (<em>interface</em>) belirliyor ve kendisini kullanan üst sınıftan yapacağı şey için yaratması gereken şeyi yaratıp kendisine vermesini istiyor. Mesela bir video oynatıcısı yapacaksınız. Bu sistemin video çözücüye ihtiyacı da var elbette. Seçeneklerden birisi, oynatıcıya doğrudan videonun yolunu vermeniz ve oynatıcının direkt çalıştırması. Bunun modülerlik sorunları oluyor ama. Donanım hızlandırmalı bir çözücü kullanmak isterseniz ne oluyor? Bu özelliği seçen bir ayarı oynatıcı sınıfına koymanız gerekiyor. Çözücünün bütün ayarlarını oynatıcının da alması gerekiyor. Oldukça büyük bir sorun bu. Çözümü ise video çözücü sınıfların ortak bir arayüze sahip olması, video oynatıcının da bu arayüzü uygulayan (<em>implement</em>) bir tipi alması. Böylece çözücüyü istediğimiz gibi ayarlayabiliriz, belli şartları yani arayüzü sağladığı sürece modüler şekilde kullanabiliriz oynatıcıda. Bunun klasik uygulanışı sanal sınıflarla arayüzleri oluşturmak ve sanal metot çağrıları ile süreci yönetmek. Eğer çalışma zamanında değiştirilebilirliğe ihtiyacınız yoksa genelleştirilmiş (<em>generic</em>) sınıflar ile de aynı sonuca daha yüksek performans ile ulaşabilirsiniz. Ama kavram aynı özünde.
+</p>
+
+<p>
+Daha önceki gönderilerimi okuyan ve/veya beni bilenler her fırsatta nesne yönelimli programlamayı yerdiğimi bilir. Burada yermeyeceğim ama. Bağımlılık zerkinin sanal sınıflarla yapılan türü elbette rahatsız ediyor genel olarak ama kavramın kendisi oldukça mantıklı. Kodun modülerliğini ve kullanılabilirliğini arttıran bir kavram. Bağımlılıklarımızı eğitmek için cebimizde kesinlikle bulunması gereken bir alet kısacası. Keza nsene yönelimli programlama yapmasam da kodumun bu yöntemi kullanmaya meylettiğini düzenli olarak görüyorum. Kodun temiz kalması için zarari diyebilirim yani.
+</p>
+
+<p>
+Bağımlılık zerki görece öğretilen bir yöntem. Nesne yönelimli programlama eğitimlerinde, okullarda, kurslarda, işyerlerinde deneyimli yazılımcılar tarafından işte yani genel olarak yazılımla ilgili bir şeyler öğretilen hemen her yerde ucundan da olsa değiniliyor bu konuya. Nitekim bence nesne yönelimli programlamanın Liskov yerine yerleştirme ilkesi gibi taraflarından daha fazla öğretilmeli. Ben burada bariz olan ama üzerine pek konuşulmayan bir ayrımdan bahsetmek istiyorum aslında ki bu gönderiyi yazma sebebim de bu: bariz ve muma (<em>explicit and implicit</em>) bağımlılıklar.
+</p>
+
+<h1>Verisel Bağımlılık</h1>
+
+<p>
+Bu kavramlar aslında yazılımların hemen her yerine girer. Hatta bence sadece yazılım değil hemen her mühendislikte benzeri kavramlar olsa gerek. Kısacası; eğer bir bağımlılık; belge içerisinde belirtilmişse bu bariz yani açık, belirtilmemişse ve varsayılmışsa bu muma yani kapalı bir bağımlılık olur. Yazılımda genel olarak muma bağımlılıklarla fazlaca karşılaştığımız için bundan bahsetmek istiyorum. Bir kodun başka bir koda bağlaşıklık seviyesi hiç bağlaşık olmamalarından (<em>uncoupled</em>) sıkı bağlaşık olmalarına (<em>tightly coupled</em>) uzanan bir spektrum. İdeali bağlaşıksız kodlardır, birindeki değişiklikler ötekini etkilemiyorsa ne âlâ! Ama aynı yazılım içerisindeki farklı kodlar hemen her zaman sıfır olmayan bir bağlaşıklık oranına sahiptir. İşte bağımlılık eğitimi burada devreye giriyor. Bir bağımlılık bariz de olabilir muma da. En basit bir örneği verelim:
+</p>
+
+<code class="block-code" type="cpp">int x = 0;
+
+void foo(int a) {
+    x += a;
+    printf("%%d\n", x);
+}
+</code>
+
+<p>
+Burada <code class="inline-code">foo</code>, <code class="inline-code">x</code>e bağımlı ama bunu bariz bir şekilde belirtmemiş. <code class="inline-code">a</code>nın artış miktarı olduğunu dokümantasyon söyleyebilir ama hâl (<em>state</em>) küresel bir değişkenin (<em>global variable</em>) arkasına saklanmış. Dolayısıyla muma bağımlılık oluyor <code class="inline-code">x</code>. Sadece bağımlılık eğitimi değil izlek desteği gibi sebeplerden ötürü de gerekiyor olsa da bağımlılık sorununu basitçe çözebiliriz:
+</p>
+
+<code class="block-code" type="cpp">void foo(int* x, int a) {
+    *x += a;
+    printf("%%d\n", x);
+}
+</code>
+
+<p>
+Evet, artık <code class="inline-code">x</code> bağımlılığımız bariz hâle gelmiş durumda. <code class="inline-code">foo</code>nun bir hâle bağlı olduğunu fonksiyonun imzası (<em>function signature</em>) bariz şekilde gösteriyor. Ancak bu tarz değişiklikler zaten genel olarak tavsiye edilir. Küresel (<em>global</em>) değişkenleri tavsiye eden kimse görmedim ben şimdiye dek.
+</p>
+
+<p>
+Çoğunlukla bağımlılıklarla ilgili sorunlar daha farklı şekillerde tezahür ediyor. Benim en sık gördüğüm sorun sanırım metotların sınıflara bağlı olması. "Bağlı olmayacak da ne olacak?" diyebilirsiniz; sorun bu metodun, sınıfın ufak bir parçasını kullanmasında oluşuyor. Tek bir veri parçasını kullanan metot on farklı veriye bağlı gözüküyor. Her metot bu şekilde olduğu için de neyin tam olarak neye bağlı olduğunu doğrudan göremiyoruz.
+</p>
+
+<p>
+Peki bağımlılığımızı nasıl eğitiriz? İlk aşama bunu çözmek. Sınıflar doğaları gereği birden fazla işi yapma eğilimine sahip. Evet SOLID'in S'si yani tek sorumluluk ilkesi (<em>single responsibility principle</em>) bu şekildeki sınıfların yanlış olduğunu söylüyor. Ama veri ile davranışı birleştirdiğimiz an yani nesne yönelimli programlamaya girdiğimizde bu ilkeyi anlamlı şekilde uygulamak pek mümkün olmuyor. Zaten doğası gereği her sınıf en az iki sorumluluğa sahip: veriyi tutmak ve o veriyi işleyen en az bir yordama sahip olmak. Öteki türlü ya serbest işlevler (<em>free function</em>) ya da düz veriler olarak tekrar yazılabilirler. Yani nesne yönelimli programlama kendisinin ilk genelgeçer kuralı ile böyle bir çelişkiye sahip. Dolayısıyla ilk aşama bu yöntemleri bırakmak oluyor. Sınıflar yerine işlevler ve veriler şeklinde düşünmek gerekiyor. Bu sayede artık her fonksiyonumuz için bağımlılıkları bariz şekilde belirtmenin yolunu açmış oluyoruz. Farklı işleri yapan işlevleri ortak bir sınıfla bağdaştırmak zorunda kalmadığımız için istediğimiz gibi bağımlılıkları bölebiliyoruz.
+</p>
+
+<p>
+Bu noktadan sonra işlevlerin girdilerini ayarlama kısmı biraz damak tadına bağlı aslında. Ama farklı işlevlerde aynı şekilde gruplanmış girdi almak, kesinlikle her zaman olmasa da, biraz şüphe uyandırmalı bence. Neredeyse hiçbir iki algoritma, eğer çözdükleri problem aynı değilse, aynı girdiler almaz. Bazı insanlar girdi sayısının çokluğunu gruplandırarak çözüyor, gruplandırma yöntemi kullanılacaksa bahsettiğim durum göz önünde buludurulabilir. C veya C++'taki designated initializer özelliği gruplandırma yöntemini güzel kullanılabilir kılabiliyor. Esas sorun aslında girdilerin isminin çağırırken verilmemesi. Kaydırma yapmak fazlasıyla kolay hâle geldiği için yanlış kullanıma müsait olabiliyor bu işlevler her ne kadar bağımlılıklarını bariz şekilde gösteriyor olsalar da. Eğer kullandığınız dil girdileri isimle vermeye (<em>named arguments</em>) izin veriyorsa gruplandırmayı çok tavsiye etmiyorum. Girdilerin kendilerine geleceksek, ben belli başlı <em>temel</em> türler dışına çıkılmaması taraftarıyım. Sayılar, metinler, diziler, eşlemeler (<em>map</em>) ve işlev işaretçileri (<em>function pointer</em>) ve bunlara referans/işaretçiler çoğu durumda yeterli olmalı ama durumunuza göre ekleme veya çıkarma yapabilirsiniz. Yine de çok elleşmemek lazım bence; bunlar çoğu dilde gerçekten temel tür olarak bulunuyor, aksi örnek olarak C'de metin yerine karakter dizisi kullanılması olabilir ama mantık aynı orada da aslında, çünkü hemen her program bunların üst üste eklenmesiyle oluşuyor.
+</p>
+
+<code class="block-code" type="cpp">struct ResourceData {
+    void bindTexture(size_t index, int bind_point) const { /* bind code */ }
+    void bindBuffer(size_t index) const { /* bind code */ }
+private:
+    std::vector&lt;Texture&gt; textures;
+    std::vector&lt;Buffer&gt; buffers;
+};
+</code>
+
+<p>
+Yukarıdaki örneğe bakalım mesela. Kodun çoğunu yazmadım ama temel mantık belli: <code class="inline-code">ResourceData</code> hem dokuları hem de veri belleklerini tutuyor ve bunlar üzerinde işlem yapıyor. En basidinden iki işlemi yazdım yukarıda. Burada dikkat ederseniz <code class="inline-code">bindTexture</code> veri bellekleriyle tamamen ilişkisiz olsa da dolaylı yoldan (doku bağlama kodunun veri belleği kullanması düşük ihtimal), <code class="inline-code">this</code> işaretçisi üzerinden, aslında veri belleklerine de bağlı oluyor. Bunu daha iyi görmenin yolu bence bu metotları düz işlev olarak yazmak:
+</p>
+
+<code class="block-code" type="cpp">struct ResourceData {
+    std::vector&lt;Texture&gt; textures;
+    std::vector&lt;Buffer&gt; buffers;
+};
+void bindTexture(ResourceData const& res, size_t index, int bind_point) { /* bind code */ }
+void bindBuffer(ResourceData const& res, size_t index) { /* bind code */ }
+</code>
+
+<p>
+İlk bakışta <code class="inline-code">bindTexture</code>'ün aslında veri belleklerini kullanmadığını göremiyoruz bu örnekte mesela. Kodun içerisine bakmadan bu bilgiye erişmemiz mümkün değil. Benim içeri yazdığım yer tutucu yorumun içerisinde kullandığını da kullanmadığını da göremiyoruz. Zaten bir fonksiyonu kullanacaksanız muhtemelen bakış açınız bu şekilde olacaktır: sadece girdileri ve çıktılarını göreceksiniz. Burada teknik olarak çok bir sorun yok aslında. Sadece gereksiz bir girdi alıyor işlevler. Sorun, bu girdiler değiştirilebilir olduğunda asıl oluyor.
+</p>
+
+<code class="block-code" type="cpp">struct ResourceData {
+    std::vector&lt;Texture&gt; textures;
+    std::vector&lt;Buffer&gt; buffers;
+    std::vector&lt;Framebuffer&gt; framebuffers;
+};
+void createFramebuffer(ResourceData& res, size_t index) { /* create framebuffer from Framebuffer object at index */ }
+void createTexture(ReourceData& res, size_t index) { /* create texture from Texture object at index */ }
+</code>
+
+<p>
+Grafik arayüzlerini bilmeyenler için: framebuffer yani okunabilir ve yazılabilir doku kümeleri renk ve derinlik dokularının bir tür birleşimi gibi bir şey. Mesela 1920x1080 boyuta sahip; kırmızı, yeşil mavi renklere sekizer bit ayıran ve derinliği de 32 bit olarak ayarlayan bir küme oluşturmak için iki tane doku oluşturmamız ve bunları bir kümeye bağlamamız gerekiyor. Buradaki sorun fark ettiniz mi? Küme oluşturmasına rağmen dokuları da değiştiriyor bu işlev. Ancak bu bilgiyi işlevin girdilerinde tam göremiyoruz. <code class="inline-code">createFramebuffer</code> ve <code class="inline-code">createTexture</code> aynı girdileri alıyor ama bu girdilerin içerisinde farklı parçaları kullanıyor. Fonksiyonun imzası fazla geniş olduğu için fonksiyonun tam ne yaptığını bilmiyoruz, o nedenle işlevin her şeyi değiştirmiş olabileceği varsayımıyla hareket etmemiz gerekebiliyor. Gelin bu bağımlılığı bariz yapalım:
+</p>
+
+<code class="block-code" type="cpp">void createFramebuffer(std::vector&lt;Texture&gt;& textures, std::vector&lt;Framebuffer&gt;& framebuffers, size_t index) {}
+void createTexture(std::vector&lt;Texture&gt;& textures, size_t index) {}
+</code>
+
+<p>
+Ve evet; böylece doku kümesi oluşturmak için hem doku hem küme dizilerine erişim gerektiği, doku oluşturmak için ise sadece doku dizisine erişim gerektiği bilgisini sadece ve sadece işlev girdilerine bakarak anlayabiliyoruz.
+</p>
+
+<p>
+Ben yukarıdaki şekilde kod yazmayı daha rahat buluyorum açıkçası. Bir işlev tamamen imzasına bakılarak değerlendirilebiliyor böylece. Bilmiyorum, bazıları bunu kirli kod olarak görüyordur, bence tam tersine her şey açık ve bariz olduğu için fazlasıyla temiz bir kod.
+</p>
+
+<h1>Sırasal Bağımlılık</h1>
+
+<p>
+Bana kalırsa hemen her programın en büyük belası bu arkadaş. En azından genel olarak en çok karşılaştığım hata türlerinin birçoğu bu bağımlılıkların muma kalmasından dolayı gerçekleşiyor. Birçok programda <code class="inline-code">init</code> ve benzeri metotlar olur. Bir şeyleri konfigüre ettikten sonra bir varlığı oluşturursunuz. Mesela GLFW kütüphanesini kullanarak OpenGL bağlamı (<em>context</em>) oluşturmayı ele alalım. Hata durumlarını kontrol etmeyi eklemiyorum konumuzla çok ilgisi olmadığı için.
+</p>
+
+<code class="block-code" type="cpp">glfwInit();
+glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+GLFWwindow* window = glfwCreateWindow(800, 600, "My Window", NULL, NULL);
+glfwMakeContextCurrent(window);
+</code>
+
+<p>
+Şöyle diyeyim: Bu kodda <code class="inline-code">glfwWindowHint</code> çağrılarının yerlerini çağrıların kendi aralarında değiştirmek hariç herhangi iki satırın yerini değiştiremiyoruz. Aslında oldukça güzel bir örnek çünkü sorunun kendisini de içeriyor sorunun çözümünü de. Mesela <code class="inline-code">glfwMakeContextCurrent</code> bir pencere gerektiriyor. Bu ikisinin yerini değiştirirsek program derlenmiyor çünkü <code class="inline-code">glfwMakeContextCurrent</code>'ın ihtiyacı olan pencere onun aynı zamanda girdisi. Burada veri bağımlılığı sebebiyle bu girdi var ama aynı zamanda zamansal bağımlılığı da çözmüş oluyor. <code class="inline-code">glfwMakeContextCurrent</code>'ın her zaman <code class="inline-code">glfwCreateWindow</code>'dan sonra çağrılacağını sadece girdilere bakarak anlayabiliyoruz. Fakat diğer satırlarda her ne kadar buna benzer bir bağımlılık olsa da girdilerde böyle bir ilişki görünmüyor. <code class="inline-code">glfwCreateWindow</code> aslında <code class="inline-code">glfwWindowHint</code> çağrılarına bağlı, her birinin varsayılan bir değeri mevcut ama bir bağımlılık var her şekilde. Nitekim bütün GLFW işlevleri <code class="inline-code">glfwInit</code>'e bağlı. Fakat bunların hiçbirisi kodun içerisinde belli değil.
+</p>
+
+<code class="block-code" type="cpp">glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+glfwInit();
+</code>
+
+<p>
+Bu şekilde yazdığımızda bize bir sorun olacağı konusunda derleyici hiçbir şekilde yardımcı olamıyor! %100 doğru C kodu yukarıdaki kod.
+</p>
+
+<p>
+Peki Elif o zaman nasıl düzeltiriz? <code class="inline-code">glfwMakeContextCurrent</code>'ın <code class="inline-code">glfwCreateWindow</code>'a bağlı olması nasıl kodun içerisinde mevcutsa benzer bir şekilde bağımlılığı koda gömmemiz gerekiyor. Temelde iki değişiklik günü kabaca kurtarır gibi: bütün GLFW işlevlerinin <code class="inline-code">glfwInit</code> tarafından oluşturulan özel bir tipte bir girdi alması ile pencere konfigürasyonunu tamamen kendine ait bir tip ile gerçekleşmesi.
+</p>
+
+<code class="block-code" type="cpp">GLFWcontext* ctx = glfwInit();
+GLFWwindowConfig cfg = {0};
+glfwWindowHint(ctx, &cfg, GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(ctx, &cfg, GLFW_CONTEXT_VERSION_MINOR, 6);
+glfwWindowDimensions(ctx, &cfg, 800, 600);
+glfwWindowTitle(ctx, &cfg, "My Window");
+GLFWwindow* window = glfwCreateWindow(ctx, &cfg);
+glfwMakeContextCurrent(ctx, window);
+</code>
+
+<p>
+Görebildiğiniz üzere artık <code class="inline-code">glfwWindowHint</code> olsun <code class="inline-code">glfwCreateWindow</code> olsun hiçbir GLFW işlevini <code class="inline-code">GLFWcontext*</code> olmadan çağıramıyoruz. Bu değeri de ancak <code class="inline-code">glfwInit</code> ile elde edebiliyoruz. Tabii ki hiçbir şey <code class="inline-code">glfwCreateWindow(NULL, &cfg)</code> yazmamızın önünde engel değil. Gönderdiğimiz <code class="inline-code">GLFWcontext*</code> değerinin gerçekten <code class="inline-code">glfwInit</code> tarafından oluşturulmuş olduğunu C'de garantilemenin pek yolu yok. C++'ta dahi oluşturucuyu (<em>constructor</em>) <code class="inline-code">glfwInit</code> dışında kullanılamaz kılabiliyor olsak da <code class="inline-code">*(GLFWcontext*)nullptr</code> gibi bir ifadenin önünde bir engel yok. Ancak Rust gibi bir dilde gerçek anlamda garantileyebiliriz. Ama burada asıl sormamız gereken soru şu: garantilemeli miyiz? Çoğunlukla zamansal bağımlılık ile ilgili hatalar birisinin <code class="inline-code">*(GLFWcontext*)nullptr</code> yazması olmuyor, sadece unutmuş olmak oluyor. Özellikle kod taşırken sıklıkla yapılan bir hata bu. Kodun etrafından dolanınca genellikle belli oluyor zaten. "Yanlış kodu çirkin yapmak" gibi bir ilke vardı bu durum için kullanılan, tam ifadenin kendisini hatırlamıyorum ama buna benzer bir şeydi. Eğer yanlış kod sırıtıyorsa bu bile genelde yeterli olur. Yapılacak bir gözden geçirme ile hatayı saptamak mümkün olacaktır gayet.
+</p>
+
+<p>
+Buradaki <code class="inline-code">GLFWcontext</code>'in herhangi anlamlı bir tür olmasına da gerek yok bu arada. <code class="inline-code">typedef struct GLFWcontext {int dummy;} GLFWcontext;</code> de olsa çalışır, <code class="inline-code">dummy</code> gerekiyor çünkü C'de boş tip mümkün değil. Eğer tekrar girilebilir (<em>re-entraant</em>) olmasını istiyorsak içerisine kullandığımız verileri gömebiliriz ama uygulama ile ilgili işletim sisteminden gelen kaynaklar hemen her zaman küresel olduğu için bu örnekte tekrar girilebilir yapmak pek de mümkün değil.
+</p>
+
+<h1>İzleksel Bağımlılık</h1>
+
+<p>
+İzleksel bağımlılık veri ve sıra/zamansal bağımlılıkların aksine çok sık karşılaşılan bir durum değil. Benim burada bahsettiğim, bir kod parçasının sadece spesifik bir izlek içerisinde çalışabildiği durum. Sanırım biz grafik programcılarının dışında çok sık karşılaşılan bir problem değil, ama bizim için gereğinden fazla soruna yol açabiliyor. Temel sorun şu: OpenGL işlevlerinin hepsi ve Vulkan gibi modern grafik arayüzlerinin işlevlerinin ciddi bölümü, grafik bağlamının oluşturulduğu izlek dışında başka bir izlekte çağrılamıyor. Çağrıldığında da genelde uygulama bir şey demeden çöküyor.
+</p>
+
+<code class="block-code" type="cpp">glfwMakeContextCurrent(window);
+thrd_t worker;
+thrd_create(&worker, &myWorkerFunc, NULL);
+</code>
+
+<p>
+<code class="inline-code">myWorkerFunc</code>'a bakalım mesela:
+</p>
+
+<code class="block-code" type="cpp">while(1) {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+</code>
+
+<p>
+Çok mantıklı görünmüyor ama grafik işini izleklere bölmek oldukça yaygın bir kalıp. Bize mantıklı görünmüyor olabilir, ama OpenGL'in izlek bağımlılığını bilmeyen birisi için çok da mantıksız görünmüyor aslında. Peki, kim OpenGL'in izlek bağımlılığını bilmiyor? C derleyicisi. Yukarıdaki kodu hiçbir uyarı almadan derleyebilirsiniz.
+</p>
+
+<p>
+Peki, bunun çözümü ne? Artık tahmin edebildiğinizi varsaymak istiyorum. Bütün OpenGL işlevlerinin bir bağlam girdisi alması. Teknik olarak OpenGL standardını bozuyor olduğu için burada ufak bir değişiklik yapıp şu şekilde bir kısıtlama da getirebiliriz: mevcut kapsam (<em>scope</em>) içerisinde OpenGL bağlamının aktif olduğunu belirten bir türden bir değişkenin var olması. Tercihen C++'ta bu tür sabitlenmiş bir tür olmalı, yani ne kopyalama (<em>copy</em>) ne de aktarma (<em>move</em>) oluşturucusu olmalı. Bu durumda referans aldığımız takdirde genel olarak çağrı yığıtının (<em>call stack</em>) gelişini garantilemesek de yanlış yoldan gelmiş olma olasılığını fazlasıyla düşürüyoruz. C'de bu tam mümkün olmadığı için zamansal bağımlılıkta olduğu gibi boş bir tip oluştururuz. Bu noktada biraz disiplin gerekiyor ne yazık ki.
+</p>
+
+<code class="block-code" type="cpp">glfwMakeContextCurrent(window);
+GLContext glctx = {0};
+thrd_t worker;
+thrd_create(&worker, &myWorkerFunc, &glctx);
+</code>
+
+<p>
+Yine <code class="inline-code">myWorkerFunc</code> içinde:
+</p>
+
+<code class="block-code" type="cpp">int myWorkerFunc(void* ctx) {
+    GLContext glctx = *(GLContext*)ctx;
+    while(1) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+}
+</code>
+
+<p>
+Şimdi diyebilirsiniz ki, bu durumda yine yanlış kod oldu ve yine derlenebilir oldu. Doğru, aslında hiçbir şey değişmedi, sadece biraz bürokrasi ekledik koda. Ama dikkat etmenizi istediğim nokta, <code class="inline-code">thrd_create</code> çağrısı. Bariz bir şekilde <code class="inline-code">GLContext</code> verisini izlekler arasında yolladığımız görülüyor burada. Bahsettiğim disiplin mevzusu da bu aslında: <code class="inline-code">GLContext</code> türüne derleyici tarafından zorlanmayan ama gözle kontrol etmesi çok zor olmayan birkaç kısıt getirmemiz gerekiyor:
+</p>
+
+<ol>
+<li><code class="inline-code">GLContext</code> sadece ve sadece yığıt üzerinde kendisi olarak bulunabilir. Hiçbir <code class="inline-code">struct</code> içerisinde <code class="inline-code">GLContext</code> içeremez. <code class="inline-code">static</code> olarak da depolanamaz.
+</li>
+<li><code class="inline-code">GLContext</code> izlek girdisi olarak gönderilemez, bunun dışında işlev girdisi olarak kullanılabilir.
+</li>
+<li>OpenGL çağrılarının hiçbiri girdi olarak yığıtta bulunan bir <code class="inline-code">GLContext</code> değeri olmadan gerçekleşemez.
+</li>
+</ol>
+
+<p>
+C'de bir türün ismini belirtmemiz zorunlu olduğu için bütün kod içerisinde <code class="inline-code">GLContext</code> kelimesini aratarak aslında olası sorunları bulabiliriz. C++ bu konuda aslında daha sıkıntılı, lambdalar <code class="inline-code">GLContext</code> türünü yakalayabilir (<em>capture</em>) ve bunu kontrol etmek görece daha zor. Teknik olarak ilk kuralın ihlali oluyor, lambdalar yakalamlarını isimsiz bir <code class="inline-code">struct</code> olarak tutuyor çünkü.
+</p>
+
+<h1>Kapanış</h1>
+
+<p>
+Özetlemek gerekirse, hemen her kodda üç tür bağımlılık olur: veri, sıra ve izlek. Veri bağımlılığını mümkün olduğunca bölmek, sıra ve izlek bağımlılıklarını ise doğru şekilde koda eklemek genel olarak kodlarımızın çok daha dayanıklı ve anlaşılabilir olmasını sağlar. Bir kodu değiştirdiğimizde yaptığımız değişikliğin sorun çıkarmayacağına güvenimiz daha yüksek olur, koda ilk kez bakan birisinin ise kodu takip edebilmesini kolaylaştırır. O nedenle, bağımlılıklarınızı eğitin, eğittirin.
+</p>
+
+<p>
+Bağımlılık konusu, tam emin olmamakla birlikte, aslında varsayım konusunun bir parçası. Bir programın her satırı belli varsayımlar üzerinden ilerler, bu varsayımları bariz yaptıkça da programın ispatlanmasını mümkün kılarız. Ama bu başka bir gönderinin konusu olsa gerek.
+</p>
+
+        </article>
+    </div>
+    <div id="foot" class="status-bar section">
+        
+            <p id="tag-field" class="status-bar-field">
+        
+         Etiketler: 
+        programlama, yazılım mimarisi, bağımlılık, temiz kod
+        
+            </p>
+        
+        
+            <p id="author-field" class="status-bar-field">
+        
+        Yazan: 
+        Elif Sanem Ceyhan
+        
+            </p>
+        
+        
+            <p id="date-field" class="status-bar-field"></p>
+        
+        Tarih: 
+        2026-09-12 21:15:02 +0300 Cmt
+        
+            </p>
+        
+        <a id="rss" href="/rss.xml" target="_blank" rel="noopener noreferrer"><p>RSS akışıma abone ol</p></a>
+    </div>
+</body>
+
+</html>

@@ -1,3 +1,7 @@
+@@@date = 2026-09-12 21:15:02 +0300 Cmt
+@@@authors = Elif Sanem Ceyhan
+@@@tags = programlama; yazılım mimarisi; bağımlılık; temiz kod
+
 # Bağımlılığını Nasıl Eğitirsin
 
 __Hiç vakit kaybetmeden not düşeyim, bu gönderi insanların bağımlılıkları ile ilgili değil. Ne alkol bağımlılığına bir çözüm bu ne de eski sevgiliye bağımlılığa. Yazılımdaki bağımlılıklardan bahsediyorum, _dependency_ terimin karşılığı olarak kullandım.__
@@ -10,7 +14,7 @@ Daha önceki gönderilerimi okuyan ve/veya beni bilenler her fırsatta nesne yö
 
 Bağımlılık zerki görece öğretilen bir yöntem. Nesne yönelimli programlama eğitimlerinde, okullarda, kurslarda, işyerlerinde deneyimli yazılımcılar tarafından işte yani genel olarak yazılımla ilgili bir şeyler öğretilen hemen her yerde ucundan da olsa değiniliyor bu konuya. Nitekim bence nesne yönelimli programlamanın Liskov yerine yerleştirme ilkesi gibi taraflarından daha fazla öğretilmeli. Ben burada bariz olan ama üzerine pek konuşulmayan bir ayrımdan bahsetmek istiyorum aslında ki bu gönderiyi yazma sebebim de bu: bariz ve muma (_explicit and implicit_) bağımlılıklar.
 
-## Bağımlılıkları Belirginleştirme
+## Verisel Bağımlılık
 
 Bu kavramlar aslında yazılımların hemen her yerine girer. Hatta bence sadece yazılım değil hemen her mühendislikte benzeri kavramlar olsa gerek. Kısacası; eğer bir bağımlılık; belge içerisinde belirtilmişse bu bariz yani açık, belirtilmemişse ve varsayılmışsa bu muma yani kapalı bir bağımlılık olur. Yazılımda genel olarak muma bağımlılıklarla fazlaca karşılaştığımız için bundan bahsetmek istiyorum. Bir kodun başka bir koda bağlaşıklık seviyesi hiç bağlaşık olmamalarından (_uncoupled_) sıkı bağlaşık olmalarına (_tightly coupled_) uzanan bir spektrum. İdeali bağlaşıksız kodlardır, birindeki değişiklikler ötekini etkilemiyorsa ne âlâ! Ama aynı yazılım içerisindeki farklı kodlar hemen her zaman sıfır olmayan bir bağlaşıklık oranına sahiptir. İşte bağımlılık eğitimi burada devreye giriyor. Bir bağımlılık bariz de olabilir muma da. En basit bir örneği verelim:
 
@@ -84,7 +88,7 @@ Ve evet; böylece doku kümesi oluşturmak için hem doku hem küme dizilerine e
 
 Ben yukarıdaki şekilde kod yazmayı daha rahat buluyorum açıkçası. Bir işlev tamamen imzasına bakılarak değerlendirilebiliyor böylece. Bilmiyorum, bazıları bunu kirli kod olarak görüyordur, bence tam tersine her şey açık ve bariz olduğu için fazlasıyla temiz bir kod.
 
-## Zamansal Bağımlılık
+## Sırasal Bağımlılık
 
 Bana kalırsa hemen her programın en büyük belası bu arkadaş. En azından genel olarak en çok karşılaştığım hata türlerinin birçoğu bu bağımlılıkların muma kalmasından dolayı gerçekleşiyor. Birçok programda `init` ve benzeri metotlar olur. Bir şeyleri konfigüre ettikten sonra bir varlığı oluşturursunuz. Mesela GLFW kütüphanesini kullanarak OpenGL bağlamı (_context_) oluşturmayı ele alalım. Hata durumlarını kontrol etmeyi eklemiyorum konumuzla çok ilgisi olmadığı için.
 
@@ -121,6 +125,60 @@ glfwMakeContextCurrent(ctx, window);
 
 Görebildiğiniz üzere artık `glfwWindowHint` olsun `glfwCreateWindow` olsun hiçbir GLFW işlevini `GLFWcontext*` olmadan çağıramıyoruz. Bu değeri de ancak `glfwInit` ile elde edebiliyoruz. Tabii ki hiçbir şey `glfwCreateWindow(NULL, &cfg)` yazmamızın önünde engel değil. Gönderdiğimiz `GLFWcontext*` değerinin gerçekten `glfwInit` tarafından oluşturulmuş olduğunu C'de garantilemenin pek yolu yok. C++'ta dahi oluşturucuyu (_constructor_) `glfwInit` dışında kullanılamaz kılabiliyor olsak da `*(GLFWcontext*)nullptr` gibi bir ifadenin önünde bir engel yok. Ancak Rust gibi bir dilde gerçek anlamda garantileyebiliriz. Ama burada asıl sormamız gereken soru şu: garantilemeli miyiz? Çoğunlukla zamansal bağımlılık ile ilgili hatalar birisinin `*(GLFWcontext*)nullptr` yazması olmuyor, sadece unutmuş olmak oluyor. Özellikle kod taşırken sıklıkla yapılan bir hata bu. Kodun etrafından dolanınca genellikle belli oluyor zaten. "Yanlış kodu çirkin yapmak" gibi bir ilke vardı bu durum için kullanılan, tam ifadenin kendisini hatırlamıyorum ama buna benzer bir şeydi. Eğer yanlış kod sırıtıyorsa bu bile genelde yeterli olur. Yapılacak bir gözden geçirme ile hatayı saptamak mümkün olacaktır gayet.
 
+Buradaki `GLFWcontext`'in herhangi anlamlı bir tür olmasına da gerek yok bu arada. `typedef struct GLFWcontext {int dummy;} GLFWcontext;` de olsa çalışır, `dummy` gerekiyor çünkü C'de boş tip mümkün değil. Eğer tekrar girilebilir (_re-entraant_) olmasını istiyorsak içerisine kullandığımız verileri gömebiliriz ama uygulama ile ilgili işletim sisteminden gelen kaynaklar hemen her zaman küresel olduğu için bu örnekte tekrar girilebilir yapmak pek de mümkün değil.
+
 ## İzleksel Bağımlılık
 
+İzleksel bağımlılık veri ve sıra/zamansal bağımlılıkların aksine çok sık karşılaşılan bir durum değil. Benim burada bahsettiğim, bir kod parçasının sadece spesifik bir izlek içerisinde çalışabildiği durum. Sanırım biz grafik programcılarının dışında çok sık karşılaşılan bir problem değil, ama bizim için gereğinden fazla soruna yol açabiliyor. Temel sorun şu: OpenGL işlevlerinin hepsi ve Vulkan gibi modern grafik arayüzlerinin işlevlerinin ciddi bölümü, grafik bağlamının oluşturulduğu izlek dışında başka bir izlekte çağrılamıyor. Çağrıldığında da genelde uygulama bir şey demeden çöküyor.
 
+```cpp
+glfwMakeContextCurrent(window);
+thrd_t worker;
+thrd_create(&worker, &myWorkerFunc, NULL);
+```
+
+`myWorkerFunc`'a bakalım mesela:
+
+```cpp
+while(1) {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+```
+
+Çok mantıklı görünmüyor ama grafik işini izleklere bölmek oldukça yaygın bir kalıp. Bize mantıklı görünmüyor olabilir, ama OpenGL'in izlek bağımlılığını bilmeyen birisi için çok da mantıksız görünmüyor aslında. Peki, kim OpenGL'in izlek bağımlılığını bilmiyor? C derleyicisi. Yukarıdaki kodu hiçbir uyarı almadan derleyebilirsiniz.
+
+Peki, bunun çözümü ne? Artık tahmin edebildiğinizi varsaymak istiyorum. Bütün OpenGL işlevlerinin bir bağlam girdisi alması. Teknik olarak OpenGL standardını bozuyor olduğu için burada ufak bir değişiklik yapıp şu şekilde bir kısıtlama da getirebiliriz: mevcut kapsam (_scope_) içerisinde OpenGL bağlamının aktif olduğunu belirten bir türden bir değişkenin var olması. Tercihen C++'ta bu tür sabitlenmiş bir tür olmalı, yani ne kopyalama (_copy_) ne de aktarma (_move_) oluşturucusu olmalı. Bu durumda referans aldığımız takdirde genel olarak çağrı yığıtının (_call stack_) gelişini garantilemesek de yanlış yoldan gelmiş olma olasılığını fazlasıyla düşürüyoruz. C'de bu tam mümkün olmadığı için zamansal bağımlılıkta olduğu gibi boş bir tip oluştururuz. Bu noktada biraz disiplin gerekiyor ne yazık ki.
+
+```cpp
+glfwMakeContextCurrent(window);
+GLContext glctx = {0};
+thrd_t worker;
+thrd_create(&worker, &myWorkerFunc, &glctx);
+```
+
+Yine `myWorkerFunc` içinde:
+
+```cpp
+int myWorkerFunc(void* ctx) {
+    GLContext glctx = *(GLContext*)ctx;
+    while(1) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+}
+```
+
+Şimdi diyebilirsiniz ki, bu durumda yine yanlış kod oldu ve yine derlenebilir oldu. Doğru, aslında hiçbir şey değişmedi, sadece biraz bürokrasi ekledik koda. Ama dikkat etmenizi istediğim nokta, `thrd_create` çağrısı. Bariz bir şekilde `GLContext` verisini izlekler arasında yolladığımız görülüyor burada. Bahsettiğim disiplin mevzusu da bu aslında: `GLContext` türüne derleyici tarafından zorlanmayan ama gözle kontrol etmesi çok zor olmayan birkaç kısıt getirmemiz gerekiyor:
+
+1. `GLContext` sadece ve sadece yığıt üzerinde kendisi olarak bulunabilir. Hiçbir `struct` içerisinde `GLContext` içeremez. `static` olarak da depolanamaz.
+2. `GLContext` izlek girdisi olarak gönderilemez, bunun dışında işlev girdisi olarak kullanılabilir.
+3. OpenGL çağrılarının hiçbiri girdi olarak yığıtta bulunan bir `GLContext` değeri olmadan gerçekleşemez.
+
+C'de bir türün ismini belirtmemiz zorunlu olduğu için bütün kod içerisinde `GLContext` kelimesini aratarak aslında olası sorunları bulabiliriz. C++ bu konuda aslında daha sıkıntılı, lambdalar `GLContext` türünü yakalayabilir (_capture_) ve bunu kontrol etmek görece daha zor. Teknik olarak ilk kuralın ihlali oluyor, lambdalar yakalamlarını isimsiz bir `struct` olarak tutuyor çünkü.
+
+## Kapanış
+
+Özetlemek gerekirse, hemen her kodda üç tür bağımlılık olur: veri, sıra ve izlek. Veri bağımlılığını mümkün olduğunca bölmek, sıra ve izlek bağımlılıklarını ise doğru şekilde koda eklemek genel olarak kodlarımızın çok daha dayanıklı ve anlaşılabilir olmasını sağlar. Bir kodu değiştirdiğimizde yaptığımız değişikliğin sorun çıkarmayacağına güvenimiz daha yüksek olur, koda ilk kez bakan birisinin ise kodu takip edebilmesini kolaylaştırır. O nedenle, bağımlılıklarınızı eğitin, eğittirin.
+
+Bağımlılık konusu, tam emin olmamakla birlikte, aslında varsayım konusunun bir parçası. Bir programın her satırı belli varsayımlar üzerinden ilerler, bu varsayımları bariz yaptıkça da programın ispatlanmasını mümkün kılarız. Ama bu başka bir gönderinin konusu olsa gerek.
