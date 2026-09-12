@@ -86,6 +86,41 @@ Ben yukarıdaki şekilde kod yazmayı daha rahat buluyorum açıkçası. Bir iş
 
 ## Zamansal Bağımlılık
 
-Bana kalırsa hemen her programın en büyük belası bu arkadaş. En azından genel olarak en çok karşılaştığım hata türlerinin birçoğu bu bağımlılıkların muma kalmasından dolayı gerçekleşiyor. Birçok programda `init` ve benzeri metotlar olur. 
+Bana kalırsa hemen her programın en büyük belası bu arkadaş. En azından genel olarak en çok karşılaştığım hata türlerinin birçoğu bu bağımlılıkların muma kalmasından dolayı gerçekleşiyor. Birçok programda `init` ve benzeri metotlar olur. Bir şeyleri konfigüre ettikten sonra bir varlığı oluşturursunuz. Mesela GLFW kütüphanesini kullanarak OpenGL bağlamı (_context_) oluşturmayı ele alalım. Hata durumlarını kontrol etmeyi eklemiyorum konumuzla çok ilgisi olmadığı için.
+
+```cpp
+glfwInit();
+glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+GLFWwindow* window = glfwCreateWindow(800, 600, "My Window", NULL, NULL);
+glfwMakeContextCurrent(window);
+```
+
+Şöyle diyeyim: Bu kodda `glfwWindowHint` çağrılarının yerlerini çağrıların kendi aralarında değiştirmek hariç herhangi iki satırın yerini değiştiremiyoruz. Aslında oldukça güzel bir örnek çünkü sorunun kendisini de içeriyor sorunun çözümünü de. Mesela `glfwMakeContextCurrent` bir pencere gerektiriyor. Bu ikisinin yerini değiştirirsek program derlenmiyor çünkü `glfwMakeContextCurrent`'ın ihtiyacı olan pencere onun aynı zamanda girdisi. Burada veri bağımlılığı sebebiyle bu girdi var ama aynı zamanda zamansal bağımlılığı da çözmüş oluyor. `glfwMakeContextCurrent`'ın her zaman `glfwCreateWindow`'dan sonra çağrılacağını sadece girdilere bakarak anlayabiliyoruz. Fakat diğer satırlarda her ne kadar buna benzer bir bağımlılık olsa da girdilerde böyle bir ilişki görünmüyor. `glfwCreateWindow` aslında `glfwWindowHint` çağrılarına bağlı, her birinin varsayılan bir değeri mevcut ama bir bağımlılık var her şekilde. Nitekim bütün GLFW işlevleri `glfwInit`'e bağlı. Fakat bunların hiçbirisi kodun içerisinde belli değil.
+
+```cpp
+glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+glfwInit();
+```
+
+Bu şekilde yazdığımızda bize bir sorun olacağı konusunda derleyici hiçbir şekilde yardımcı olamıyor! %100 doğru C kodu yukarıdaki kod.
+
+Peki Elif o zaman nasıl düzeltiriz? `glfwMakeContextCurrent`'ın `glfwCreateWindow`'a bağlı olması nasıl kodun içerisinde mevcutsa benzer bir şekilde bağımlılığı koda gömmemiz gerekiyor. Temelde iki değişiklik günü kabaca kurtarır gibi: bütün GLFW işlevlerinin `glfwInit` tarafından oluşturulan özel bir tipte bir girdi alması ile pencere konfigürasyonunu tamamen kendine ait bir tip ile gerçekleşmesi.
+
+```cpp
+GLFWcontext* ctx = glfwInit();
+GLFWwindowConfig cfg = {0};
+glfwWindowHint(ctx, &cfg, GLFW_CONTEXT_VERSION_MAJOR, 4);
+glfwWindowHint(ctx, &cfg, GLFW_CONTEXT_VERSION_MINOR, 6);
+glfwWindowDimensions(ctx, &cfg, 800, 600);
+glfwWindowTitle(ctx, &cfg, "My Window");
+GLFWwindow* window = glfwCreateWindow(ctx, &cfg);
+glfwMakeContextCurrent(ctx, window);
+```
+
+Görebildiğiniz üzere artık `glfwWindowHint` olsun `glfwCreateWindow` olsun hiçbir GLFW işlevini `GLFWcontext*` olmadan çağıramıyoruz. Bu değeri de ancak `glfwInit` ile elde edebiliyoruz. Tabii ki hiçbir şey `glfwCreateWindow(NULL, &cfg)` yazmamızın önünde engel değil. Gönderdiğimiz `GLFWcontext*` değerinin gerçekten `glfwInit` tarafından oluşturulmuş olduğunu C'de garantilemenin pek yolu yok. C++'ta dahi oluşturucuyu (_constructor_) `glfwInit` dışında kullanılamaz kılabiliyor olsak da `*(GLFWcontext*)nullptr` gibi bir ifadenin önünde bir engel yok. Ancak Rust gibi bir dilde gerçek anlamda garantileyebiliriz. Ama burada asıl sormamız gereken soru şu: garantilemeli miyiz? Çoğunlukla zamansal bağımlılık ile ilgili hatalar birisinin `*(GLFWcontext*)nullptr` yazması olmuyor, sadece unutmuş olmak oluyor. Özellikle kod taşırken sıklıkla yapılan bir hata bu. Kodun etrafından dolanınca genellikle belli oluyor zaten. "Yanlış kodu çirkin yapmak" gibi bir ilke vardı bu durum için kullanılan, tam ifadenin kendisini hatırlamıyorum ama buna benzer bir şeydi. Eğer yanlış kod sırıtıyorsa bu bile genelde yeterli olur. Yapılacak bir gözden geçirme ile hatayı saptamak mümkün olacaktır gayet.
 
 ## İzleksel Bağımlılık
+
+
