@@ -20,10 +20,18 @@ search.addEventListener('input', e => {
     /** @type {string} */
     let query = e.target.value.toLowerCase();
 
-    post_data.replaceChildren();
-    Array.from(all_nodes.childNodes).filter(child => child.textContent.toLowerCase().includes(query)).forEach(child => post_data.appendChild(child.cloneNode(true)));
-    count_field.innerText = `${post_data.childElementCount} Gönderi`
-    if (post_data.childElementCount == 0) {
+    let filtered_count = 0;
+    Array.from(post_data.children).forEach(child => {
+        if (child.textContent.toLowerCase().includes(query)) {
+            child.hidden = false;
+            filtered_count += 1;
+        } else {
+            child.hidden = true;
+        }
+    });
+
+    count_field.innerText = `${filtered_count} Gönderi`
+    if (filtered_count == 0) {
         result_container.style.display = "none";
     } else {
         result_container.style.display = "block";

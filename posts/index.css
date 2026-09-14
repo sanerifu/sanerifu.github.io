@@ -28,8 +28,12 @@
     padding: 0;
 }
 
-#post-data > li:not(:last-child) {
-    border-bottom: 1px solid black;
+#post-data > li {
+    border-top: none;
+}
+
+#post-data > li:not([hidden]) ~ li:not([hidden]) {
+    border-top: 1px solid black;
 }
 
 .hidden-when-js-unavailable {
