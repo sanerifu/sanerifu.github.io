@@ -38,5 +38,4 @@ search.addEventListener('input', e => {
     }
 });
 
-console.log(js_enabled)
 js_enabled.forEach(element => element.classList.remove("hidden-when-js-unavailable"));
