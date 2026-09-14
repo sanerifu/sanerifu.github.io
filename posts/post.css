@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Comic Relief";
-    src: url("/ComicRelief-Regular.ttf");
+    src: url("/fonts/ComicRelief-Regular.ttf");
 }
 
 * {
@@ -10,7 +10,7 @@
 :root {
     --bg-color: #FFD1DC;
     --section-bg-color: #FFF5F7;
-    --bg-image: url("/tile.svg");
+    --bg-image: url("/assets/tile.svg");
     --text-color: #222222;
     --border-color: #DDDDDD;
     --link-hover-color: #EFC7C5;
