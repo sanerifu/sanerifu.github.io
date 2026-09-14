@@ -449,7 +449,7 @@ local function metadataToRss(metadata)
         "        %s\n" ..
         "        %s\n" ..
         "        %s\n" ..
-        "    </item>"
+        "    </item>\n\n"
     ):format(
         wrapInTags("title", metadata.title and metadata.title[1] or nil),
         wrapInTags("description",
@@ -468,7 +468,9 @@ local function metadataToIndex(metadata)
                 <div>Tarih: %s</div>
                 <div>Yazan%s: %s</div>
                 <div>Etiketler: %s</div>
-            </li>]]):format(
+            </li>
+
+]]):format(
         metadata.path, metadata.title[1],
         metadata.date and metadata.date[1] or "",
         (metadata.authors and #metadata.authors > 1) and "lar" or "",
@@ -526,7 +528,26 @@ local commands = {
 
         writeFile(output.html, metadataToHtml(input.template, metadata, metadata_context))
         writeFile(output.index, metadataToIndex(metadata))
-        writeFile(output.index, metadataToIndex(metadata))
+        writeFile(output.rss, metadataToRss(metadata))
+    end,
+
+    replace = function()
+        local output = {
+            merged = table.remove(args, 1),
+        }
+        local input = {
+            template = table.remove(args, 1),
+            files = args,
+        }
+
+        local content = {}
+        for i = 1, #input.files do
+            table.insert(content, readFile(input.files[i]))
+        end
+        writeFile(
+            output.merged,
+            readFile(input.template):gsub("%@DATA%@", table.concat(content, "")):gsub("%@COUNT%@", tostring(#content))
+        )
     end,
 }
 
