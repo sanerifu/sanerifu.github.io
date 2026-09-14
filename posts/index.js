@@ -12,10 +12,6 @@ const result_container = document.getElementById("result-container");
 
 const js_enabled = document.querySelectorAll(".hidden-when-js-unavailable");
 
-const all_nodes = document.createDocumentFragment()
-
-Array.from(post_data.childNodes).forEach(child => all_nodes.appendChild(child.cloneNode(true)));
-
 search.addEventListener('input', e => {
     /** @type {string} */
     let query = e.target.value.toLowerCase();
