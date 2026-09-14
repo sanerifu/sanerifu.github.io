@@ -25,7 +25,7 @@
             <p id="tag-field" class="status-bar-field">
         </if>
         <if expression="tags"> Etiketler: </if>
-        <replace variable="tags" placeholder="tag" delimiter=", ">tag</replace>
+        <replace variable="tags" placeholder="tag" delimiter="; ">tag</replace>
         <if expression="tags">
             </p>
         </if>
@@ -33,7 +33,7 @@
             <p id="author-field" class="status-bar-field">
         </if>
         <if expression="authors">Yazan</if><if expression="authors and authors_count > 1">lar</if><if expression="authors">: </if>
-        <replace variable="authors" placeholder="author" delimiter=", ">author</replace>
+        <replace variable="authors" placeholder="author" delimiter="; ">author</replace>
         <if expression="authors">
             </p>
         </if>
@@ -41,7 +41,7 @@
             <p id="date-field" class="status-bar-field">
         </if>
         <if expression="date">Tarih: </if>
-        <replace variable="date" placeholder="date" delimiter=", ">date</replace>
+        <replace variable="date" placeholder="date" delimiter="; ">date</replace>
         <if expression="date">
             </p>
         </if>
