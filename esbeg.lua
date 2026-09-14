@@ -290,6 +290,9 @@ end
 ---@param path string
 ---@param content string
 local function writeFile(path, content)
+    if content == nil then
+        return
+    end
     local file = assert(io.open(path, "w"))
     assert(file:write(content))
     file:close()
@@ -368,7 +371,30 @@ local function metadataToHtml(template, metadata, metadata_context)
             end)
 end
 
+local function metadataToIndex(metadata)
+    if metadata.title == nil or #metadata.title < 1 then
+        return nil
+    end
+    return ([[            <li>
+                <a href="/%s" style="display: block;">%s</a>
+                <div>Tarih: %s</div>
+                <div>Yazan%s: %s</div>
+                <div>Etiketler: %s</div>
+            </li>
+
+]]):format(
+        metadata.path, metadata.title[1],
+        metadata.date and metadata.date[1] or "",
+        (metadata.authors and #metadata.authors > 1) and "lar" or "",
+        metadata.authors and table.concat(metadata.authors, "; "),
+        metadata.tags and table.concat(metadata.tags, "; ")
+    )
+end
+
 local function metadataToRss(metadata)
+    if metadata.title == nil or #metadata.title < 1 then
+        return nil
+    end
     local weekday_mapping = {
         ["Pzt"] = "Mon",
         ["Sal"] = "Tue",
@@ -456,26 +482,6 @@ local function metadataToRss(metadata)
             metadata.plaintext[1] and (utf8Slice(metadata.plaintext[1], 1, 120) .. "...") or nil),
         wrapInTags("link", metadata.path and ("https://sanerifu.github.io/" .. metadata.path) or nil),
         wrapInTags("pubDate", makeRfc2822(metadata.date and metadata.date[1] or nil))
-    )
-end
-
-local function metadataToIndex(metadata)
-    if metadata.title == nil or #metadata.title < 1 then
-        return ""
-    end
-    return ([[            <li>
-                <a href="/%s" style="display: block;">%s</a>
-                <div>Tarih: %s</div>
-                <div>Yazan%s: %s</div>
-                <div>Etiketler: %s</div>
-            </li>
-
-]]):format(
-        metadata.path, metadata.title[1],
-        metadata.date and metadata.date[1] or "",
-        (metadata.authors and #metadata.authors > 1) and "lar" or "",
-        metadata.authors and table.concat(metadata.authors, "; "),
-        metadata.tags and table.concat(metadata.tags, "; ")
     )
 end
 

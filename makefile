@@ -3,7 +3,7 @@ converter := esbeg.lua
 
 sources := $(sort $(wildcard posts/*/index.md))
 to_be_compiled_sources := $(sources) index.md about/index.md
-to_be_compiled := $(to_be_compiled_sources:%.md=%.index)
+to_be_compiled := $(to_be_compiled_sources:%.md=%.html)
 outputs := $(sources:%.md=%.html)
 indices := $(sources:%.md=%.index)
 feeds := $(sources:%.md=%.rss)
@@ -12,11 +12,11 @@ all: posts/index.html $(to_be_compiled)
 
 templates/post.html: templates/menubar.html
 
-posts/index.html: templates/posts.html $(indices) 
+posts/index.html: templates/posts.html $(outputs) 
 	@echo MERGING
 	@$(lua) $(converter) replace posts/index.html templates/posts.html $(indices)
 	@$(lua) $(converter) replace rss.xml templates/rss.xml $(feeds)
 
-%.index: %.md templates/post.html $(converter)
+%.html: %.md templates/post.html $(converter)
 	@echo COMPILING $<
-	@$(lua) $(converter) compile $< templates/post.html $(patsubst %.md,%.html,$<) $@ $(patsubst %.md,%.rss,$<)
+	@$(lua) $(converter) compile $< templates/post.html $(patsubst %.md,%.html,$<) $(patsubst %.md,%.index,$<) $(patsubst %.md,%.rss,$<)
