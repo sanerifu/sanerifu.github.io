@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Gönderiler - Arama</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="index.js" defer="defer"></script>
+</head>
+
+<body>
+    <div id="page-header" class="section">Sanerifu</div>
+    <nav class="section">
+        <a href="/">Ana Sayfa</a>
+        <a href="/posts">Gönderiler</a>
+        <a href="/about">Hakkımda</a>
+    </nav>
+
+
+    <div class="hidden-when-js-unavailable" id="search-box">
+        <input id="searchbar" placeholder="Gönderilerde Ara" class="section" />
+    </div>
+
+    <div id="post-count-field" class="status-bar-field section">@POSTCOUNT@ Gönderi</div>
+
+    <div id="result-container" class="section">
+        <ul id="post-data">
+@POSTDATA@
+        </ul>
+    </div>
+
+    <div class="status-bar-field section">
+        <a href="https://github.com/sanerifu">
+            <p>GitHub Hesabım</p>
+        </a>
+        <a id="rss" href="/rss.xml" target="_blank" rel="noopener noreferrer">
+            <p>RSS akışıma abone ol</p>
+        </a>
+    </div>
+</body>
+
+</html>

@@ -407,6 +407,23 @@ end
 
 local EXCLUDED_FIELDS = { ['body'] = true, ['plaintext'] = true }
 
+local function metadataToHtml(metadata)
+    if metadata.title == nil or #metadata.title < 1 then
+        return ""
+    end
+    return ([[            <li>
+                <a href="/%s" style="display: block;">%s</a>
+                <div>Tarih: %s</div>
+                <div>Yazan%s: %s</div>
+                <div>Etiketler: %s</div>
+            </li>]]):format(
+        metadata.path, metadata.title[1],
+        metadata.date and metadata.date[1] or "",
+        (metadata.authors and #metadata.authors > 1) and "lar" or "", metadata.authors and table.concat(metadata.authors, "; "),
+        metadata.tags and table.concat(metadata.tags, "; ")
+    )
+end
+
 local function jsonify(value)
     if type(value) == 'table' then
         local ret = {}
@@ -433,7 +450,7 @@ local function jsonify(value)
     end
 end
 
-io.write(jsonify(metadata))
+io.write(metadataToHtml(metadata))
 
 local weekday_mapping = {
     ["Pzt"] = "Mon",

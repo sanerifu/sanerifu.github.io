@@ -32,3 +32,6 @@
     border-bottom: 1px solid black;
 }
 
+.hidden-when-js-unavailable {
+    display: none;
+}
