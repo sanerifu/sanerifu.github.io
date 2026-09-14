@@ -178,7 +178,7 @@ Görebildiğiniz üzere artık <code class="inline-code">glfwWindowHint</code> o
 </p>
 
 <p>
-Buradaki <code class="inline-code">GLFWcontext</code>'in herhangi anlamlı bir tür olmasına da gerek yok bu arada. <code class="inline-code">typedef struct GLFWcontext {int dummy;} GLFWcontext;</code> de olsa çalışır, <code class="inline-code">dummy</code> gerekiyor çünkü C'de boş tip mümkün değil. Eğer tekrar girilebilir (<em>re-entraant</em>) olmasını istiyorsak içerisine kullandığımız verileri gömebiliriz ama uygulama ile ilgili işletim sisteminden gelen kaynaklar hemen her zaman küresel olduğu için bu örnekte tekrar girilebilir yapmak pek de mümkün değil.
+Buradaki <code class="inline-code">GLFWcontext</code>'in herhangi anlamlı bir tür olmasına da gerek yok bu arada. <code class="inline-code">struct GLFWcontext {int dummy;};</code> de olsa çalışır, <code class="inline-code">dummy</code> gerekiyor çünkü C'de boş tip mümkün değil. Eğer tekrar girilebilir (<em>re-entraant</em>) olmasını istiyorsak içerisine kullandığımız verileri gömebiliriz ama uygulama ile ilgili işletim sisteminden gelen kaynaklar hemen her zaman küresel olduğu için bu örnekte tekrar girilebilir yapmak pek de mümkün değil.
 </p>
 
 <h1>İzleksel Bağımlılık</h1>
