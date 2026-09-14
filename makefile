@@ -22,4 +22,4 @@ $(dir)index.html: $(index_name) $(indices)
 
 %.index: %.md $(template) $(converter)
 	@echo COMPILING $<
-	@$(lua) $(converter) $< $(patsubst %.md,%.html,$<) $(template) $(patsubst %.md,%.rss,$<) > $@
+	@$(lua) $(converter) compile $< $(template) $(patsubst %.md,%.html,$<) $@ $(patsubst %.md,%.rss,$<)

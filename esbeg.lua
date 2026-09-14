@@ -278,23 +278,22 @@ local markdown = require('markdown')
 
 local args = { ... }
 
-local input
-local template
-local rss_file = args[4]
-
-do
-    local input_file = assert(io.open(args[1], "r"))
-    input = assert(input_file:read("*a")) ---@type string
-    input_file:close()
+---@param path string
+---@return string content
+local function readFile(path)
+    local file = assert(io.open(path, "r"))
+    local content = assert(file:read("*a")) ---@type string
+    file:close()
+    return content
 end
 
-do
-    local template_file = assert(io.open(args[3], "r"))
-    template = assert(template_file:read("*a")) ---@type string
-    template_file:close()
+---@param path string
+---@param content string
+local function writeFile(path, content)
+    local file = assert(io.open(path, "w"))
+    assert(file:write(content))
+    file:close()
 end
-
-local metadata = { path = args[2]:match("(.+)%/index.html") }
 
 ---@param s string
 ---@return string
@@ -313,39 +312,6 @@ local function split(s, delimiter)
     return ret
 end
 
-local input_array = {}
-
-for line in input:gmatch("(.-)\n") do
-    local key, value = line:match("^%@%@%@(.-)%=(.-)$")
-    local title = line:match("^%#([^#].*)$")
-    if key then
-        key = trim(key) ---@type string
-        local splitted = split(value, ";")
-        local val = {}
-        for i = 1, #splitted do
-            table.insert(val, trim(splitted[i]))
-        end
-        metadata[key] = val
-    elseif not metadata.title and title then
-        metadata.title = { trim(title) }
-        metadata.page_title = { trim(title) }
-    elseif title then
-    else
-        table.insert(input_array, (line:gsub("^%#(%#+)", "%1")))
-    end
-end
-
-input = table.concat(input_array, '\n')
-
-metadata.body = { markdown.compile(input, markdown.DefaultHandler) }
-metadata.plaintext = { markdown.compile(input, markdown.TextHandler) }
-
-local metadata_context = {} ---@type table<string, boolean | integer>
-for k in pairs(metadata) do
-    metadata_context[k] = #metadata[k] > 0
-    metadata_context[k .. '_count'] = #metadata[k]
-end
-
 local loader = loadstring or load
 ---@param expr string
 ---@param env table
@@ -361,53 +327,139 @@ local function eval(expr, env, ...)
     return ret
 end
 
-local output =
-    template
-    :gsub("%<include%s+path%s*%=%s*%\"(.-)%\"%s*%/?%>",
-        ---@param path string
-        ---@return string
-        function(path)
-            local file = assert(io.open(trim(path), "r"))
-            local data = file:read("*a")
-            file:close()
-            return data:gsub("%%", "%%%%")
-        end)
-    :gsub("%<if%s+expression%s*%=%s*%\"(.-)%\"%s*%>(.-)%<%/if%>",
-        ---@param expression string
-        ---@param body string
-        function(expression, body)
-            return (eval(expression, metadata_context) and body or ""):gsub("%%", "%%%%")
-        end)
-    :gsub(
-        "%<replace%s+variable%s*%=%s*%\"(.-)%\"%s+placeholder%s*%=%s*%\"(.-)%\"(%s+delimiter%s*%=%s*%\"(.-)%\")%s*%>(.-)%<%/replace%>",
-        ---@param variable string
-        ---@param placeholder string
-        ---@param delimiter string
-        ---@param body string
-        function(variable, placeholder, _, delimiter, body)
-            local value = metadata[variable]
-            if not value then
-                return ""
-            end
+local function metadataToHtml(template, metadata, metadata_context)
+    return
+        template
+        :gsub("%<include%s+path%s*%=%s*%\"(.-)%\"%s*%/?%>",
+            ---@param path string
+            ---@return string
+            function(path)
+                local file = assert(io.open(trim(path), "r"))
+                local data = file:read("*a")
+                file:close()
+                return data:gsub("%%", "%%%%")
+            end)
+        :gsub("%<if%s+expression%s*%=%s*%\"(.-)%\"%s*%>(.-)%<%/if%>",
+            ---@param expression string
+            ---@param body string
+            function(expression, body)
+                return (eval(expression, metadata_context) and body or ""):gsub("%%", "%%%%")
+            end)
+        :gsub(
+            "%<replace%s+variable%s*%=%s*%\"(.-)%\"%s+placeholder%s*%=%s*%\"(.-)%\"(%s+delimiter%s*%=%s*%\"(.-)%\")%s*%>(.-)%<%/replace%>",
+            ---@param variable string
+            ---@param placeholder string
+            ---@param delimiter string
+            ---@param body string
+            function(variable, placeholder, _, delimiter, body)
+                local value = metadata[variable]
+                if not value then
+                    return ""
+                end
 
-            local ret = {}
-            for i = 1, #value do
-                local escaped = value[i]:gsub("%%", "%%%%")
-                local replaced = body:gsub(placeholder, escaped)
-                table.insert(ret, replaced)
-            end
-            ret = table.concat(ret, (delimiter:gsub("%%", "%%%%")))
-            return ret
-        end)
-do
-    local output_file = assert(io.open(args[2], "w"))
-    output_file:write(output)
-    output_file:close()
+                local ret = {}
+                for i = 1, #value do
+                    local escaped = value[i]:gsub("%%", "%%%%")
+                    local replaced = body:gsub(placeholder, escaped)
+                    table.insert(ret, replaced)
+                end
+                ret = table.concat(ret, (delimiter:gsub("%%", "%%%%")))
+                return ret
+            end)
 end
 
-local EXCLUDED_FIELDS = { ['body'] = true, ['plaintext'] = true }
+local function metadataToRss(metadata)
+    local weekday_mapping = {
+        ["Pzt"] = "Mon",
+        ["Sal"] = "Tue",
+        ["Çrş"] = "Wed",
+        ["Prş"] = "Thu",
+        ["Cum"] = "Fri",
+        ["Cmt"] = "Sat",
+        ["Paz"] = "Sun",
+    }
 
-local function metadataToHtml(metadata)
+    local month_mapping = {
+        ["01"] = "Jan",
+        ["02"] = "Feb",
+        ["03"] = "Mar",
+        ["04"] = "Apr",
+        ["05"] = "May",
+        ["06"] = "Jun",
+        ["07"] = "Jul",
+        ["08"] = "Aug",
+        ["09"] = "Sep",
+        ["10"] = "Oct",
+        ["11"] = "Nov",
+        ["12"] = "Dec",
+    }
+
+    ---@param extendedIso string?
+    ---@return string?
+    local function makeRfc2822(extendedIso)
+        if not extendedIso then
+            return nil
+        end
+        local year, month, day, hour, minute, second, timezone, weekday = extendedIso:match(
+            "^(....)%-(..)%-(..) (..):(..):(..) (.....) (.+)$"
+        )
+
+        return ("%s, %d %s %d %s:%s:%s %s"):format(
+            weekday_mapping[weekday],
+            tonumber(day),
+            month_mapping[month],
+            tonumber(year),
+            hour,
+            minute,
+            second,
+            timezone
+        )
+    end
+
+    ---@param tag string
+    ---@param text string?
+    ---@return string
+    local function wrapInTags(tag, text)
+        if text then
+            return ("<%s>%s</%s>"):format(tag, text, tag)
+        else
+            return ""
+        end
+    end
+
+    ---@param text string
+    ---@param start integer
+    ---@param finish integer
+    ---@return string
+    local function utf8Slice(text, start, finish)
+        local t = {}
+        local i = 1
+        for c in text:gmatch("[\1-\127\194-\244][\128-\191]*") do
+            if start <= i and i <= finish then
+                table.insert(t, c)
+            end
+            i = i + 1
+        end
+        return table.concat(t, "")
+    end
+
+    return (
+        "    <item>\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "        %s\n" ..
+        "    </item>"
+    ):format(
+        wrapInTags("title", metadata.title and metadata.title[1] or nil),
+        wrapInTags("description",
+            metadata.plaintext[1] and (utf8Slice(metadata.plaintext[1], 1, 120) .. "...") or nil),
+        wrapInTags("link", metadata.path and ("https://sanerifu.github.io/" .. metadata.path) or nil),
+        wrapInTags("pubDate", makeRfc2822(metadata.date and metadata.date[1] or nil))
+    )
+end
+
+local function metadataToIndex(metadata)
     if metadata.title == nil or #metadata.title < 1 then
         return ""
     end
@@ -419,126 +471,64 @@ local function metadataToHtml(metadata)
             </li>]]):format(
         metadata.path, metadata.title[1],
         metadata.date and metadata.date[1] or "",
-        (metadata.authors and #metadata.authors > 1) and "lar" or "", metadata.authors and table.concat(metadata.authors, "; "),
+        (metadata.authors and #metadata.authors > 1) and "lar" or "",
+        metadata.authors and table.concat(metadata.authors, "; "),
         metadata.tags and table.concat(metadata.tags, "; ")
     )
 end
 
-local function jsonify(value)
-    if type(value) == 'table' then
-        local ret = {}
-        if #value > 0 then
-            for i = 1, #value do
-                table.insert(ret, jsonify(value[i]))
-            end
-            return '[' .. table.concat(ret, ',') .. ']'
-        else
-            for k, v in pairs(value) do
-                if not EXCLUDED_FIELDS[k] then
-                    assert(type(k) == 'string', "Cannot jsonify non-string keys")
-                    table.insert(ret, ("%q: %s"):format(k, jsonify(v)))
+local commands = {
+    compile = function()
+        local input = {
+            markdown = readFile(args[1]),
+            template = readFile(args[2]),
+        }
+        local output = {
+            html = args[3], ---@type string
+            index = args[4], ---@type string
+            rss = args[5], ---@type string
+        }
+
+        local metadata = { path = output.html:match("(.+)%/index.html") }
+
+        local input_array = {}
+
+        for line in input.markdown:gmatch("(.-)\n") do
+            local key, value = line:match("^%@%@%@(.-)%=(.-)$")
+            local title = line:match("^%#([^#].*)$")
+            if key then
+                key = trim(key) ---@type string
+                local splitted = split(value, ";")
+                local val = {}
+                for i = 1, #splitted do
+                    table.insert(val, trim(splitted[i]))
                 end
+                metadata[key] = val
+            elseif not metadata.title and title then
+                metadata.title = { trim(title) }
+                metadata.page_title = { trim(title) }
+            elseif title then
+            else
+                table.insert(input_array, (line:gsub("^%#(%#+)", "%1")))
             end
-            return '{' .. table.concat(ret, ',') .. '}'
         end
-    elseif type(value) == 'string' then
-        return ("%q"):format(value)
-    elseif type(value) == 'nil' then
-        return "null"
-    else
-        return tostring(value)
-    end
-end
 
-io.write(metadataToHtml(metadata))
+        input.markdown = table.concat(input_array, '\n')
 
-local weekday_mapping = {
-    ["Pzt"] = "Mon",
-    ["Sal"] = "Tue",
-    ["Çrş"] = "Wed",
-    ["Prş"] = "Thu",
-    ["Cum"] = "Fri",
-    ["Cmt"] = "Sat",
-    ["Paz"] = "Sun",
+        metadata.body = { markdown.compile(input.markdown, markdown.DefaultHandler) }
+        metadata.plaintext = { markdown.compile(input.markdown, markdown.TextHandler) }
+
+        local metadata_context = {} ---@type table<string, boolean | integer>
+        for k in pairs(metadata) do
+            metadata_context[k] = #metadata[k] > 0
+            metadata_context[k .. '_count'] = #metadata[k]
+        end
+
+        writeFile(output.html, metadataToHtml(input.template, metadata, metadata_context))
+        writeFile(output.index, metadataToIndex(metadata))
+        writeFile(output.index, metadataToIndex(metadata))
+    end,
 }
 
-local month_mapping = {
-    ["01"] = "Jan",
-    ["02"] = "Feb",
-    ["03"] = "Mar",
-    ["04"] = "Apr",
-    ["05"] = "May",
-    ["06"] = "Jun",
-    ["07"] = "Jul",
-    ["08"] = "Aug",
-    ["09"] = "Sep",
-    ["10"] = "Oct",
-    ["11"] = "Nov",
-    ["12"] = "Dec",
-}
-
----@param extendedIso string?
----@return string?
-local function makeRfc2822(extendedIso)
-    if not extendedIso then
-        return nil
-    end
-    local year, month, day, hour, minute, second, timezone, weekday = extendedIso:match(
-        "^(....)%-(..)%-(..) (..):(..):(..) (.....) (.+)$"
-    )
-
-    return ("%s, %d %s %d %s:%s:%s %s"):format(
-        weekday_mapping[weekday],
-        tonumber(day),
-        month_mapping[month],
-        tonumber(year),
-        hour,
-        minute,
-        second,
-        timezone
-    )
-end
-
----@param tag string
----@param text string?
----@return string
-local function wrapInTags(tag, text)
-    if text then
-        return ("<%s>%s</%s>"):format(tag, text, tag)
-    else
-        return ""
-    end
-end
-
----@param text string
----@param start integer
----@param finish integer
----@return string
-local function utf8Slice(text, start, finish)
-    local t = {}
-    local i = 1
-    for c in text:gmatch("[\1-\127\194-\244][\128-\191]*") do
-        if start <= i and i <= finish then
-            table.insert(t, c)
-        end
-        i = i + 1
-    end
-    return table.concat(t, "")
-end
-
-do
-    local rss = assert(io.open(rss_file, "w"))
-    rss:write((
-        "    <item>\n" ..
-        "        %s\n" ..
-        "        %s\n" ..
-        "        %s\n" ..
-        "        %s\n" ..
-        "    </item>"
-    ):format(
-        wrapInTags("title", metadata.title and metadata.title[1] or nil),
-        wrapInTags("description", metadata.plaintext[1] and (utf8Slice(metadata.plaintext[1], 1, 120) .. "...") or nil),
-        wrapInTags("link", metadata.path and ("https://sanerifu.github.io/" .. metadata.path) or nil),
-        wrapInTags("pubDate", makeRfc2822(metadata.date and metadata.date[1] or nil))
-    ))
-end
+local command = table.remove(args, 1)
+commands[command]()
