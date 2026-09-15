@@ -43,7 +43,7 @@ Daha önceki gönderilerimi okuyan ve/veya beni bilenler her fırsatta nesne yö
 Bağımlılık zerki görece öğretilen bir yöntem. Nesne yönelimli programlama eğitimlerinde, okullarda, kurslarda, işyerlerinde deneyimli yazılımcılar tarafından işte yani genel olarak yazılımla ilgili bir şeyler öğretilen hemen her yerde ucundan da olsa değiniliyor bu konuya. Nitekim bence nesne yönelimli programlamanın Liskov yerine yerleştirme ilkesi gibi taraflarından daha fazla öğretilmeli. Ben burada bariz olan ama üzerine pek konuşulmayan bir ayrımdan bahsetmek istiyorum aslında ki bu gönderiyi yazma sebebim de bu: bariz ve muma (<em>explicit and implicit</em>) bağımlılıklar.
 </p>
 
-<h1>Verisel Bağımlılık</h1>
+<h1 id="verisel-bagimlilik">Verisel Bağımlılık <a aria-hidden="true" style="display: inline-block;" href="#verisel-bagimlilik">§</a></h1>
 
 <p>
 Bu kavramlar aslında yazılımların hemen her yerine girer. Hatta bence sadece yazılım değil hemen her mühendislikte benzeri kavramlar olsa gerek. Kısacası; eğer bir bağımlılık; belge içerisinde belirtilmişse bu bariz yani açık, belirtilmemişse ve varsayılmışsa bu muma yani kapalı bir bağımlılık olur. Yazılımda genel olarak muma bağımlılıklarla fazlaca karşılaştığımız için bundan bahsetmek istiyorum. Bir kodun başka bir koda bağlaşıklık seviyesi hiç bağlaşık olmamalarından (<em>uncoupled</em>) sıkı bağlaşık olmalarına (<em>tightly coupled</em>) uzanan bir spektrum. İdeali bağlaşıksız kodlardır, birindeki değişiklikler ötekini etkilemiyorsa ne âlâ! Ama aynı yazılım içerisindeki farklı kodlar hemen her zaman sıfır olmayan bir bağlaşıklık oranına sahiptir. İşte bağımlılık eğitimi burada devreye giriyor. Bir bağımlılık bariz de olabilir muma da. En basit bir örneği verelim:
@@ -133,7 +133,7 @@ Ve evet; böylece doku kümesi oluşturmak için hem doku hem küme dizilerine e
 Ben yukarıdaki şekilde kod yazmayı daha rahat buluyorum açıkçası. Bir işlev tamamen imzasına bakılarak değerlendirilebiliyor böylece. Bilmiyorum, bazıları bunu kirli kod olarak görüyordur, bence tam tersine her şey açık ve bariz olduğu için fazlasıyla temiz bir kod.
 </p>
 
-<h1>Sırasal Bağımlılık</h1>
+<h1 id="sirasal-bagimlilik">Sırasal Bağımlılık <a aria-hidden="true" style="display: inline-block;" href="#sirasal-bagimlilik">§</a></h1>
 
 <p>
 Bana kalırsa hemen her programın en büyük belası bu arkadaş. En azından genel olarak en çok karşılaştığım hata türlerinin birçoğu bu bağımlılıkların muma kalmasından dolayı gerçekleşiyor. Birçok programda <code class="inline-code">init</code> ve benzeri metotlar olur. Bir şeyleri konfigüre ettikten sonra bir varlığı oluşturursunuz. Mesela GLFW kütüphanesini kullanarak OpenGL bağlamı (<em>context</em>) oluşturmayı ele alalım. Hata durumlarını kontrol etmeyi eklemiyorum konumuzla çok ilgisi olmadığı için.
@@ -181,7 +181,7 @@ Görebildiğiniz üzere artık <code class="inline-code">glfwWindowHint</code> o
 Buradaki <code class="inline-code">GLFWcontext</code>'in herhangi anlamlı bir tür olmasına da gerek yok bu arada. <code class="inline-code">struct GLFWcontext {int dummy;};</code> de olsa çalışır, <code class="inline-code">dummy</code> gerekiyor çünkü C'de boş tip mümkün değil. Eğer tekrar girilebilir (<em>re-entraant</em>) olmasını istiyorsak içerisine kullandığımız verileri gömebiliriz ama uygulama ile ilgili işletim sisteminden gelen kaynaklar hemen her zaman küresel olduğu için bu örnekte tekrar girilebilir yapmak pek de mümkün değil.
 </p>
 
-<h1>İzleksel Bağımlılık</h1>
+<h1 id="izleksel-bagimlilik">İzleksel Bağımlılık <a aria-hidden="true" style="display: inline-block;" href="#izleksel-bagimlilik">§</a></h1>
 
 <p>
 İzleksel bağımlılık veri ve sıra/zamansal bağımlılıkların aksine çok sık karşılaşılan bir durum değil. Benim burada bahsettiğim, bir kod parçasının sadece spesifik bir izlek içerisinde çalışabildiği durum. Sanırım biz grafik programcılarının dışında çok sık karşılaşılan bir problem değil, ama bizim için gereğinden fazla soruna yol açabiliyor. Temel sorun şu: OpenGL işlevlerinin hepsi ve Vulkan gibi modern grafik arayüzlerinin işlevlerinin ciddi bölümü, grafik bağlamının oluşturulduğu izlek dışında başka bir izlekte çağrılamıyor. Çağrıldığında da genelde uygulama bir şey demeden çöküyor.
@@ -246,7 +246,7 @@ Yine <code class="inline-code">myWorkerFunc</code> içinde:
 C'de bir türün ismini belirtmemiz zorunlu olduğu için bütün kod içerisinde <code class="inline-code">GLContext</code> kelimesini aratarak aslında olası sorunları bulabiliriz. C++ bu konuda aslında daha sıkıntılı, lambdalar <code class="inline-code">GLContext</code> türünü yakalayabilir (<em>capture</em>) ve bunu kontrol etmek görece daha zor. Teknik olarak ilk kuralın ihlali oluyor, lambdalar yakalamlarını isimsiz bir <code class="inline-code">struct</code> olarak tutuyor çünkü.
 </p>
 
-<h1>Kapanış</h1>
+<h1 id="kapanish">Kapanış <a aria-hidden="true" style="display: inline-block;" href="#kapanish">§</a></h1>
 
 <p>
 Özetlemek gerekirse, hemen her kodda üç tür bağımlılık olur: veri, sıra ve izlek. Veri bağımlılığını mümkün olduğunca bölmek, sıra ve izlek bağımlılıklarını ise doğru şekilde koda eklemek genel olarak kodlarımızın çok daha dayanıklı ve anlaşılabilir olmasını sağlar. Bir kodu değiştirdiğimizde yaptığımız değişikliğin sorun çıkarmayacağına güvenimiz daha yüksek olur, koda ilk kez bakan birisinin ise kodu takip edebilmesini kolaylaştırır. O nedenle, bağımlılıklarınızı eğitin, eğittirin.
