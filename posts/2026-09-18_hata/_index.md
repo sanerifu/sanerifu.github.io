@@ -42,4 +42,12 @@ Peki, modern C++'ta, ve genel olarak modern dillerde hataları nasıl "yakalıyo
 
 ## Sonucu Dönmek
 
-Rust kullanan herkes `Result<T, E>` türünü kullanmıştır herhalde. Temel olarak belirttiği şey "bu işlev ya doğru üretilmiş bir değeri döner ya da hata döner". Hatta Haskell'de benzer işleve sahip türün ismi `Either`.
+Rust kullanan herkes `Result<T, E>` türünü kullanmıştır herhalde. Temel olarak belirttiği şey "bu işlev ya doğru üretilmiş bir değeri döner ya da hata döner". Hatta Haskell'de benzer işleve sahip türün ismi `Either`, yani ya biri ya öteki. Modern C++ da bu yöne doğru evrilmekte, bkz. `std::expected`. Aykırılıkların en büyük avantajlarından birisi, C++ gibi dillerde bedelsiz (_zero cost_) şekilde gerçekleştirilebilmeleri (_implement_). Kod doğru çalışıyorken aykırılıklar fazladan hiçbir şey yapmıyor bir bakıma. Ama hata olduğunda baya yavaş şekilde bu hatayı yukarı taşıyor. Sonuç türlerinde bu gibi bir asimetri yok, büyük ölçüde simetrik. Genelde bir hata olsa da olmasa da bunun maliyeti tek bir `if`'ten ibaret. Ama bundan çok daha önemli bir avantajı var sonuç türlerinin. O da işlevin imzası içerisinde kesinlikle dahil olmaları, ve bu özelliğe sahip Java'nın aksine işlev zincirleri oluşturmada sorun çıkarmamaları. Mesela Java'da izlekler için kullandığımız işlevler, daha doğrusu işlev-benzeri sınıflar, herhangi bir aykırılık fırlatamaz.
+
+```java
+new Thread(() -> throw Exception("foo"));
+```
+
+gibi bir ifade ne yazık ki derlenmiyor. İzleğin iç işlevi oluşabilecek hataların hepsini kendisi çözmek zorunda, basit bir şekilde çağıran izleğe bunu bildiremiyoruz. Fakat eğer izleklerimiz bir değer dönebiliyorsa, ki eşzamansız (_asynchronous_) işlemlerde genelde gelecek değerler (_future_) üzerinden bunu gerçekleştirebiliriz, bu döndüğümüz değeri bir sonuç türü kılarak kolayca olası sorunları çağıran izleğe iletebiliriz. Ancak aykırılıklarda bir tür bant dışı (_off band_) iletişime ihtiyacımız var. Mesela izleğin sahip olacağı bir `getException` metodu. Bu metot, eğer izlek bitmişse ve bu bitiş bir aykırılık fırlatılması ile olmuşsa bize fırlatılan aykırılığı verebilir. Ama bu, açık konuşmak gerekirse, hiç de temiz değil gibi bence.
+
+Sonuç türlerinin bir diğer avantajlarından birisi ise _monad_ özelliklerine sahip olabilmeleri.
